@@ -1,0 +1,13 @@
+
+
+name_pair a;
+name_pair b;
+
+a.name = "abc";
+a.age=3;
+
+
+b.name = "abc";
+b.age=3;
+
+assert ( a==b);

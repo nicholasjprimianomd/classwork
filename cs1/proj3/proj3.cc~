@@ -1,0 +1,138 @@
+/**********************************************************************
+ *Project 3: Bulls and Cows
+ *
+ *Description
+ *
+ *Author: Nicholas Primiano <nprimiano@fordham.edu>
+ *Date: 5 Feburay 2013
+ *
+ **********************************************************************/
+#include <bjarne/std_lib_facilities.h>
+
+void offer_help();
+bool play_one_game(vector<int> solution);
+bool check_cows(vector<int> solution, vector<int> guess_solution, int k, int game_length);
+
+int main(){
+    vector<int> solution;
+    int help;
+    int play_again;
+
+    cout << "Need help? (0/1)? " << endl;
+    cin >> help;
+    if(cin.fail()){
+	error("Bad input.");
+    }
+    if (help == 1)
+	offer_help();
+    else if (help == 0){  
+	play_one_game(solution);
+    }
+    else
+	cout << "Bad input." << endl;
+
+    
+    cout << "Congratulations." << endl;
+    
+
+    while(true){
+	cout << "Play again (0/1)? ";
+	cin >> play_again;
+	if(cin.fail()){
+	    error("Bad input.");
+	}
+	if (play_again == 1)
+	    play_one_game(solution);
+	else if (play_again == 0)
+	    return 0;
+	else
+	    cout << "Bad input." << endl;
+    }
+}
+
+bool play_one_game(vector<int> solution){
+
+    int bull = 0;
+    int cow = 0;
+    int guess = 0;
+    int check_play = 0;
+    int guess_count = 1;
+    const int game_length = 4;
+    const int range = 9;
+    
+    vector<int> cows;
+
+    srand(time(0));
+    for(int i = 0; i < game_length; ++i) {
+	int random = 0;
+	random = rand() % 10;
+	solution.push_back(random);
+    }
+
+    cout << "Solution: " << endl; //for debugging
+    for(int j = 0; j < game_length; ++j){
+	cout << solution[j] << " ";
+    }
+
+    cout << endl;
+
+    while(true){
+	vector<int> guess_solution;
+	cout << "Guess # " << guess_count << ":" << endl;
+	for(int j = 0; j < game_length; ++j){   	    
+	    cin >> guess;
+	    if(cin.fail()){
+		error("Bad input.");
+	    }
+	    if(guess > range){
+		error("Out of range. Enter a an integer between 0 and 9.");
+	    }
+	    if(guess < 0){
+	        cout << "Too bad! " << "Solution was "; 
+		for(int j = 0; j < game_length; ++j){
+		    cout << solution[j] << " ";
+		}
+		cout << endl;
+		exit(EXIT_SUCCESS);
+	    }
+	    guess_solution.push_back(guess);
+	    if(guess_solution.size() > game_length){
+		error("Out of range. Too many guesses");
+	    }
+	}
+
+	for(int k = 0; k < game_length; ++k){
+	    if(solution[k] == guess_solution[k])
+		++bull;
+	    else{
+		check_cows(solution, guess_solution, k, game_length);
+		if(check_cows(solution, guess_solution, k, game_length) == true)
+		    ++cow;
+	    } 
+	}
+	++guess_count;
+	cout << bull << " bulls , " << cow << " cows" << endl;
+
+	if(bull == game_length){
+	    return true;
+	}
+	else if(bull < game_length){
+	    bull = 0;
+	    cow = 0;
+	}
+    }
+}
+
+void offer_help(){
+    cout << "Help." << endl;
+    vector<int> solution;
+    play_one_game(solution);
+}
+
+bool check_cows(vector <int> solution, vector<int> guess_solution, int k, int game_length){
+    for (int i = 0; i < game_length; ++i){
+	if (guess_solution[k] == solution[i])
+	    return true;
+    }
+    return false;
+}

@@ -1,0 +1,23 @@
+#include <bjarne/std_libfacilities.h>
+
+istream operator+(istream& input, string string_1, string string_2);
+
+int main(){
+
+  string string_1;
+  string string_2;
+
+  cout << "Enter two strings to concatinate:" << endl;
+  cout << "String 1:";
+  cin << sting_1 << endl;
+  cout << "String 2:";
+  cin << string_2 << endl;
+
+  operator+(input, string_1, string_2);
+}
+
+istream operator+(istream& input, string string_1, string string_2){
+
+
+
+}

@@ -1,0 +1,56 @@
+#include <bjarne/std_lib_facilities.h>
+
+class lounge{
+public:
+
+  lounge(int seats, int tables) {
+    set_seats(seats);
+    set_tables(tables);
+}
+  int get_seats(){
+    return seats;
+  }
+  void set_seats(int set){
+       seats = set;
+  }
+  void set_tables(int set){
+       tables = set;
+  }
+  int get_tables(){
+    return tables;
+  }
+
+private:
+  int seats;
+  int tables;
+
+};				// end class lounge
+
+
+ostream& operator<<(ostream& lounge_output, lounge& second_floor);
+
+int main(){
+
+  lounge second_floor(1, 4);
+
+
+  cout << second_floor.get_seats() << endl;
+  cout << second_floor.get_tables() << endl;
+
+  second_floor.set_seats(8);
+  second_floor.set_tables(9);
+
+  cout << second_floor.get_seats() << endl;
+  cout << second_floor.get_tables() << endl;
+
+  cout << second_floor;
+
+}
+
+ostream& operator<<(ostream& lounge_output, lounge& second_floor){
+
+  lounge_output << second_floor.get_seats() << second_floor.get_tables() << endl;
+
+  return lounge_output;
+}
+

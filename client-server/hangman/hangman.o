@@ -1,0 +1,591 @@
+Script started on Thu 08 May 2014 10:17:51 PM EDT
+ca[primiano@erdos hangman]$ cat AbstractHangmanClient.java
+import java.net.*;
+import java.io.*;
+
+/**
+ * <p>This class contains the logic of a hangman game.</p>
+ *
+ * <p><a id="intro"></a>Since this class is a derived class of
+ * <code>SimpleSocketClient</code>, the main action is in 
+ * its <code>handleSession()</code> method. Said method will contact a
+ * Hangman server, and obtain a word from the server. It will then
+ * interact with the player, until one of two things has happened:</p>
+ * <ul>
+ *   <li>The player has guessed the word. In this case, the player is
+ *       congratulated.</li>
+ *   <li>The player has made too many bad guesses. In this case, the player is
+ *      "punished". </li>
+ * </ul>
+ * <p>Those methods that actually interact with the player are left as
+ * abstract methods. A concrete subclass of 
+ * <code>AbstractHangmanClient</code> can then interact with the
+ * player as it sees fit. Hence, one might have a
+ * text-based interface, a graphical interface, perhaps even an audio 
+ * interface.</p> 
+ * 
+ * @author Nicholas Primiano
+ * @version 2.0, 8 May 2014
+ */
+
+public abstract class AbstractHangmanClient extends SimpleSocketClient 
+{
+  
+  /**
+   * State control value for unconnected state
+   */
+  private final static int STATE_UNCONNECTED = 1;
+
+ /**
+   * State control value for connected state
+   */  
+  private final static int STATE_CONNECTED = 2;
+
+  /**
+   * State control value for playing state
+   */  
+  private final static int STATE_PLAYING = 3;
+
+  /**
+   * State control value for winner state
+   */  
+  private final static int STATE_WINNER = 4;
+
+  /**
+   * State control value for loser state
+   */  
+  private final static int STATE_LOSER = 5;
+
+  /**
+   * State control variable
+   */  
+  protected static int state;
+
+  /**
+   * the default host on which a Hangman server is running
+   */
+  protected static final String HANGMAN_DEFAULT_SERVER = "erdos.dsm.fordham.edu";
+
+  /**
+   * the default Hangman port number
+   */
+  protected static final int HANGMAN_DEFAULT_PORT = 9999;   
+
+  /**
+   * total number of guesses remaining
+   */
+  protected int guessesRemaining;
+
+  /**
+   * the word as determined so far by the player's letter choices
+   */
+  protected StringBuffer wordsSoFar;
+
+  /**
+   * correct word to display to the player
+   */
+  protected String correct;
+
+  /**
+   * the word to be guessed by the player
+   */
+  protected String theWord;
+
+  /**
+   * current guessed character
+   */
+  protected int correctGuess;
+
+  private DataInputStream remoteDIS;
+  private InputStreamReader remoteISR;
+  private SafeBufferedReader remoteBR;
+
+  private final int TOTAL_GUESSES_REMAINING = 10;
+  private char curGuess;
+  private int length;  
+ 
+  /**
+   * Congratulate the winner on her acumen.
+   */
+  public abstract void congratulateWinner();
+  
+  /**
+   * Display the current game state.
+   */
+  public abstract void displayGame();
+
+  /**
+   * Obtain a guess from the user.
+   *
+   * @return obtain an uppercase letter for a GUESS
+   */
+  public abstract char elicitGuess();
+  
+  /**
+   * Find out whether we want to play again.
+   *
+   * @return true or false, according to whether we want to play again
+   * or not.
+   */
+  public abstract boolean elicitPlayAgain();
+  
+  /**
+   * Player didn't guess the word; hang her.
+   */
+  public abstract void punishLoser();  
+ 
+  /**
+   * The constructor for the <code>AbstractHangmanClient</code> class.
+   * 
+   * @param debugging True iff debugging output is enabled
+   * @param hostName The host on which the hangman server resides
+   * @param portNumber The port number on which the server is
+   * listening
+   */
+  AbstractHangmanClient(boolean debugging, String hostName, int portNumber) 
+  {
+    super.debugOn = debugging;
+    super.hostName = hostName;
+    super.portNum = portNumber;
+    super.run();
+  }
+
+  /**
+   * <p>This methods overrides the SimpleSocketClient.handleSession()
+   * method.</p>
+   *
+   * <p>As mentioned in the <a href="#intro">introductory section</a>, 
+   * this method handles the main logic of a hangman game. It uses 
+   * a fairly simple finite state machine to do this.</p>
+   */
+  public void handleSession() 
+  {   
+      try {
+	      remoteDIS = new DataInputStream(remoteInputStream);
+	      remoteISR = new InputStreamReader(remoteDIS);
+	      remoteBR = new SafeBufferedReader(remoteISR);
+	      // ignore welcome message
+	      remoteBR.readLine();
+	      remoteBR.readLine();
+	      state = STATE_CONNECTED;
+	      while(state != STATE_UNCONNECTED){
+		switch(state) {
+		case (STATE_UNCONNECTED):
+		  break;
+		case (STATE_CONNECTED):
+		  startNewGame();
+		  break;
+		case (STATE_PLAYING):
+		  curGuess = elicitGuess();
+		  processGuess();
+		  break;
+		case (STATE_WINNER):
+		  handleEndGame();
+		  break;
+		case (STATE_LOSER):
+		  handleEndGame();
+		  break;
+		default:
+		   state = STATE_UNCONNECTED;
+		   break;
+		}
+      }
+      remoteOutputStream.writeBytes("BYE" + "\n");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  } 
+   
+  /**
+   * <p>Start a new game.</p>
+   *
+   * <p> This involves contacting the server, finding out the length of
+   * the newword, initializing our guess for what the new word looks 
+   * like, and displaying the letter.</p>
+   */
+  public void startNewGame()
+  {
+    try {
+      remoteOutputStream.writeBytes("NEW" + "\n");
+      String  wordLength;
+      wordLength = remoteBR.readLine();
+      length = Integer.parseInt(wordLength);
+      guessesRemaining = TOTAL_GUESSES_REMAINING;
+      correctGuess = 0;
+      wordsSoFar = new StringBuffer();
+      for (int i = 0 ; i < length; i ++){
+	wordsSoFar.append('*');
+      }
+      displayGame();
+      state = STATE_PLAYING;
+    } catch (IOException e) {
+      e.printStackTrace();
+    }  
+  }
+  
+  /**
+   * <p>Process a valid (A..Z) guess from the player.</p>
+   *
+   * <p>We send the guess to the server. The server tells us at what
+   * positions the guess matches the word. Our knowledge of the word 
+   * is updated appropriately. If we have guessed the word, the player is 
+   * congratulated. If there are no matches, the number of remaining
+   * guesses is decremented, and the player is punished if there are no
+   * remaining guesses.</p>
+   */
+  public void processGuess() 
+  {
+    try {
+      remoteOutputStream.writeBytes("GUESS " + curGuess + "\n" );
+      boolean corGuesses = false;
+      for (int i = 0; i < length;  i++) {
+	String s = remoteBR.readLine();
+	// s is "true" or "false"
+	if (Boolean.valueOf(s.trim()) && wordsSoFar.charAt(i) == '*') {
+	  wordsSoFar.setCharAt(i, curGuess); 
+	  corGuesses = true;
+	  correctGuess++;
+	}
+      }
+      if (!corGuesses) guessesRemaining--;
+      if (guessesRemaining == 0 ) state = STATE_LOSER; else 
+	if (correctGuess == length) state = STATE_WINNER; else {
+	  displayGame();
+	}
+    } catch (IOException e) {
+      e.printStackTrace();
+    } 
+  }
+   
+  /**
+   * Handle the end of game (either a winner or a loser)
+   */
+  public void handleEndGame() 
+  {
+    try {
+	remoteOutputStream.writeBytes("QUIT" + "\n");
+	correct = remoteBR.readLine();
+    if (state == STATE_WINNER) congratulateWinner();
+    if (state == STATE_LOSER) punishLoser();
+      } 
+      catch (IOException e) {
+	e.printStackTrace();
+      }
+    if (elicitPlayAgain()) 
+      state = STATE_CONNECTED;  
+    else 
+      state = STATE_UNCONNECTED;
+    
+  }
+
+}
+
+[primiano@erdos hangman]$ cat TextHangmanClient.java
+import java.util.Scanner;
+
+/**
+ * A class that implements the abstract methods of <code>Abstract
+ * HangmanClient</code>.
+ * <p>
+ * It provides a text-based interface, as well as a
+ * <code>main()</code> method, giving an executable program.
+ *
+ * @author Nicholas Primiano
+ * @version 2.0, 8 May 2014
+ */
+
+public class TextHangmanClient extends AbstractHangmanClient
+{
+  
+  /**
+   * The constructor for the <code>TextHangmanClient</code> class.
+   * 
+   * @param debugging True iff debugging output is enabled
+   * @param serverName The host on which the hangman server resides
+   * @param portNumber The port number on which the server is
+   * listening
+   */
+  public TextHangmanClient(boolean debugging, String serverName, 
+			   int portNumber)
+  {
+    super(debugging, serverName, portNumber);
+  }
+
+  /**
+   * Obtain a guess from the user.
+   * 
+   * @return an uppercase letter for a GUESS
+   */
+  public char elicitGuess()
+  {
+    Scanner reader = new Scanner(System.in);
+    String input;
+    while (true) {
+      System.out.println("Letter ? ");   
+      input = reader.next().toUpperCase();
+      // first char of input
+      if (super.wordsSoFar.indexOf(input.substring(0, 1)) >= 0)
+	System.out.println("Already guessed " + input.substring(0, 1));
+      else
+	return input.charAt(0);
+    }
+  } 
+
+  /**
+   * Display the current game state
+   */
+  public void displayGame()
+  {
+    System.out.println("Word: " + wordsSoFar); 
+    System.out.println("Incorrect Guesses Remaining: " + guessesRemaining);   
+  }
+
+  /**
+   * Congratulate the winner on her acumen.
+   */
+  public void congratulateWinner()
+  {
+    System.out.println("Word was: " + correct);
+    System.out.println("Congratulations! You got the word!");
+  }
+  /**
+   * Player didn't guess the word; hang him.
+   */
+  public void punishLoser()
+  {
+    System.out.println("Sorry you lose.");
+    System.out.println("Word was: " + correct);
+  }
+
+  /**
+   * Find out whether we want to play again.
+   * 
+   * @return true or false, according to whether we want to play again
+   * or not
+   */
+  public boolean elicitPlayAgain()
+  {
+    while (true){
+      System.out.println("Another game (Y/N)?");
+      Scanner reader = new Scanner(System.in);
+      String input;
+      input = reader.next();
+      if (input.equalsIgnoreCase("yes") || 
+	  input.equalsIgnoreCase("y"))
+	return true;
+      else if (input.equalsIgnoreCase("no") || 
+	       input.equalsIgnoreCase("n"))
+	return false;
+      System.out.println("Bad input try again.");
+    }
+  }
+
+  /**
+   * <p>The usual <code>main()</code> function, which gets things 
+   * rolling.</p>
+   * 
+   * <p>After parsing the command line, it invokes the constructor 
+   * for this class. That's it! Optional command line parameter:</p>
+   * <ul>
+   *    <li> Flag -d: enable debug output</li>
+   *    <li>Flag -h: print help message </li>
+   *    <li>Name of alternate Hangman server </li>
+   * </ul>
+   * <p>Any other flags (e.g., -x) will cause the help message 
+   * to be printed, along with an error exit.</p>
+   */
+  public static void main(String args[])
+  {
+    String server = HANGMAN_DEFAULT_SERVER;
+    boolean debugging = false;
+    int currentArg = 0;                 // current argument number
+
+    if (args.length > 0)                // look for flags
+      if (args[0].charAt(0) == '-') {
+	currentArg++;
+	switch (args[0].charAt(1)) { // what's the flag?
+	case 'd':
+	  debugging = true;
+	  break;
+	case 'h':                   // ask for help
+	  usage();
+	  System.exit(0);
+	default:                      // illegal flag
+	  usage();
+	  System.exit(1);
+	}
+      }
+    if (args.length > currentArg)       // alternate server?
+      server = args[currentArg];
+
+    // okay, here we go!!
+    new TextHangmanClient(debugging, server, HANGMAN_DEFAULT_PORT);
+  }
+
+  /**
+   * Print usage message
+   */
+  public static void usage()
+  {
+    System.err.println("Usage: HangmanServer [-d] [-h] [server]");
+    System.err.println("  -d: print debugging info");
+    System.err.println("  -h: print this help msg");
+  }  
+} // TextHangmanClient
+
+
+
+[primiano@erdos hangman]$ rm *.class
+rm: remove regular file ‘AbstractHangmanClient.class’? y
+rm: remove regular file ‘SafeBufferedReader.class’? y
+rm: remove regular file ‘SimpleSocketClient.class’? y
+rm: remove regular file ‘TextHangmanClient.class’? y
+[primiano@erdos hangman]$ javac TextHangmanClient.java
+[primiano@erdos hangman]$ java TextHangmanClient
+Word: *******************
+Incorrect Guesses Remaining: 10
+Letter ? 
+e
+Word: ******E***E********
+Incorrect Guesses Remaining: 10
+Letter ? 
+a
+Word: ******E***E*A******
+Incorrect Guesses Remaining: 10
+Letter ? 
+i
+Word: ***I**E***E*A*I*I**
+Incorrect Guesses Remaining: 10
+Letter ? 
+o
+Word: *O*I**E***E*A*I*I**
+Incorrect Guesses Remaining: 10
+Letter ? 
+u
+Word: *O*I**E***E*A*I*I**
+Incorrect Guesses Remaining: 9
+Letter ? 
+t
+Word: *O*I*TE***ETA*I*IT*
+Incorrect Guesses Remaining: 9
+Letter ? 
+s
+Word: *O*I*TE***ETA*I*IT*
+Incorrect Guesses Remaining: 8
+Letter ? 
+r
+Word: *O*I*TER*RETA*I*IT*
+Incorrect Guesses Remaining: 8
+Letter ? 
+n
+Word: NONINTER*RETA*I*IT*
+Incorrect Guesses Remaining: 8
+Letter ? 
+y
+Word: NONINTER*RETA*I*ITY
+Incorrect Guesses Remaining: 8
+Letter ? 
+h
+Word: NONINTER*RETA*I*ITY
+Incorrect Guesses Remaining: 7
+Letter ? 
+d
+Word: NONINTER*RETA*I*ITY
+Incorrect Guesses Remaining: 6
+Letter ? 
+l
+Word: NONINTER*RETA*ILITY
+Incorrect Guesses Remaining: 6
+Letter ? 
+p
+Word: NONINTERPRETA*ILITY
+Incorrect Guesses Remaining: 6
+Letter ? 
+c
+Word: NONINTERPRETA*ILITY
+Incorrect Guesses Remaining: 5
+Letter ? 
+b
+Word was: NONINTERPRETABILITY
+Congratulations! You got the word!
+Another game (Y/N)?
+7
+Bad input try again.
+Another game (Y/N)?
+y
+Word: *********
+Incorrect Guesses Remaining: 10
+Letter ? 
+a
+Word: *********
+Incorrect Guesses Remaining: 9
+Letter ? 
+f
+Word: *********
+Incorrect Guesses Remaining: 8
+Letter ? 
+g
+Word: *********
+Incorrect Guesses Remaining: 7
+Letter ? 
+h
+Word: *H*******
+Incorrect Guesses Remaining: 7
+Letter ? 
+h
+Already guessed H
+Letter ? 
+f
+Word: *H*******
+Incorrect Guesses Remaining: 6
+Letter ? 
+f
+Word: *H*******
+Incorrect Guesses Remaining: 5
+Letter ? 
+n
+Word: *H***N***
+Incorrect Guesses Remaining: 5
+Letter ? 
+r
+Word: RH***N***
+Incorrect Guesses Remaining: 5
+Letter ? 
+s
+Word: RH***N***
+Incorrect Guesses Remaining: 4
+Letter ? 
+h
+Already guessed H
+Letter ? 
+f
+Word: RH***N***
+Incorrect Guesses Remaining: 3
+Letter ? 
+h
+Already guessed H
+Letter ? 
+r
+Already guessed R
+Letter ? 
+v
+Word: RH***N***
+Incorrect Guesses Remaining: 2
+Letter ? 
+j
+Word: RH***N***
+Incorrect Guesses Remaining: 1
+Letter ? 
+t
+Word: RH***N*T*
+Incorrect Guesses Remaining: 1
+Letter ? 
+w
+Sorry you lose.
+Word was: RHODONITE
+Another game (Y/N)?
+n
+[primiano@erdos hangman]$ exit
+exit
+
+Script done on Thu 08 May 2014 10:22:44 PM EDT

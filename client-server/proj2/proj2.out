@@ -1,0 +1,817 @@
+Script started on Thu 20 Feb 2014 11:40:12 PM EST
+[primiano@erdos proj2]$ rm *.class
+rm: remove regular file ‘Circle.class’? yes
+rm: remove regular file ‘Cube.class’? yes
+rm: remove regular file ‘Proj2.class’? yes
+rm: remove regular file ‘Shape2D.class’? yes
+rm: remove regular file ‘Shape3D.class’? yes
+rm: remove regular file ‘Shape.class’? yes
+rm: remove regular file ‘Sphere.class’? yes
+rm: remove regular file ‘Square.class’? yes
+[primiano@erdos proj2]$ javac Proj2.java
+[primiano@erdos proj2]$ Proj2
+Proj2: Command not found.
+[primiano@erdos proj2]$ java Proj
+Cricle with:
+   radius 3.5
+   center at (6.0, 9.0)
+   perimeter of 21.991 
+   area of 38.485
+
+Square with:
+   side length 12.0
+   center at (2.0, 2.0)
+   perimeter of 48.000 
+   area of 144.000
+
+Sphere with:
+   radius 5.0
+   center at (1.5, 4.5, 2.2)
+   area of 314.159 
+   volume of 523.599
+
+Cube with:
+   side length 2.2
+   center at (0.0, 0.0, 0.0)
+   area of 29.040 
+   volume of 10.648
+
+Cricle with:
+   radius 0.0
+   center at (0.0, 0.0)
+   perimeter of 0.000 
+   area of 0.000
+
+Square with:
+   side length 0.0
+   center at (3.2, 1.6)
+   perimeter of 0.000 
+   area of 0.000
+
+[primiano@erdos proj2]$ cat Shape.java
+/**
+ * An abstract Shape class. This class encapsulates the behaviors of
+ * all two- and three0dimensional shapes.
+ *
+ * @version 1.0 28 Jan 2014
+ * @author Nicholas Primiano
+ */
+
+public abstract class Shape {
+
+  /** 
+   * Abstract method that creates a string version of a Shape,
+   * suitable for (e.g.) printing
+   *
+   * @return the string representation of a Shape
+   */
+
+  public abstract String toString();
+}
+[primiano@erdos proj2]$ cat Shape2D.java
+/**
+ * An abstract class of two-dimensional shapes.
+ * 
+ * @version 1.0 28 January 2014
+ * @author Nicholas Primiano
+ */
+
+public abstract class Shape2D extends Shape {
+  
+  protected double centerX = 0;
+  protected double centerY = 0;
+
+  /**
+   * Zero-parameter constructor sets the center to be the origin (0.0, 0.0).
+   */
+
+  public Shape2D(){
+    this.centerX = 0;
+    this.centerY = 0;
+  }
+
+  /**
+   * Two-parameter constructor allows user to specify the center's
+   * x- and y-coordinates.
+   *
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate
+   */
+  
+  public Shape2D(double centerX, double centerY) {
+    this.centerX = centerX;
+    this.centerY = centerY;
+  }
+  
+  /**
+   * Get the center's x-coordinate
+   *
+   * @return x-coordinate of the center
+   */
+
+  public double getCenterX(double centerX){
+    return centerX;
+  }
+  
+  /**
+   * Get the center's y-coordinate
+   *
+   * @return y-coordinate of the center
+   */
+
+  public double getCenterY(double centerY){
+    return centerY;
+  }
+  
+  /**
+   * Abstract method that computes the perimeter of a two-dimensional
+   * shape.
+   * 
+   * @return the preimeter of the shape.
+   */
+
+  public abstract double perimeter();
+  
+  /**
+   * Abstract method that computes the area of a three-dimensional
+   * shape.
+   * 
+   * @return the area of the shape.
+   */
+
+  public abstract double area();
+}
+[primiano@erdos proj2]$ cat Square.java
+/**
+ * The Square class is a class of two-dimensional shapes. Not
+ * surprisingly, the objects of this class are square.  A square is
+ * specified by its center and sidelength
+ *
+ * @version 1.0 28 Jan 2014
+ * @author Nicholas Primiano
+ */
+
+public class Square extends Shape2D {
+  private double sideLength = 0;
+
+  /**
+   * Zero-parameter constructor makes the origin the center of the
+   * square and makes the sidelength of the square zero.
+   */
+
+  public Square(){
+    this.centerX = 0;
+    this.centerY = 0;
+    this.sideLength = 0;
+  }
+
+  /**
+   * One-parameter constructor sets the sidelength, ands makes the
+   * origin the center of the square.
+   *
+   * @param sideLength the sidelength of the square
+   */
+
+  public Square(double sideLength) {
+    // super(0,0);
+    this.centerX = 0;
+    this.centerY = 0;
+    this.sideLength = sideLength;
+  }
+
+  /**
+   * Two-parameter constructor sets the center, and makes the
+   * sidelength of the square zero.
+   *
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate
+   */
+  
+  public Square(double centerX, double centerY){
+    // super(centerX, centerY);
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.sideLength = 0;
+  }
+
+  /**
+   * Three parameter constructor sets the sidelength and the center of
+   * the square.
+   *
+   * @param sideLength the sideLength of the square
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate 
+   */
+
+  public Square(double sideLength, double centerX, double centerY){
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.sideLength = sideLength;
+  }
+
+  /**
+   * Determine the square's sidelength.
+   *
+   * @return the sidelength of the square
+   */
+
+  public double getSideLength(double sideLength){
+    return sideLength;
+  }  
+ 
+  /**
+   * Determine the perimeter.
+   *
+   * @return the perimeter of the square
+   */
+
+  public double perimeter() {
+    // perimeter of a square 4 * sidelength
+    return 4 * sideLength;
+  }
+
+  /**
+   * Determine the square's area.
+   *
+   * @return the area of the square
+   */
+
+  public double area() {
+    return sideLength * sideLength;
+  }
+
+  /**
+   * Create a string verson of the square, suitable for (e.g.)
+   * printing
+   *
+   * @return the string representation of the square
+   */
+
+ public String toString() {
+    return String.format("Square with:\n   side length %.1f\n" +
+			 "   center at (%.1f, %.1f)\n" + 
+			 "   perimeter of %.3f \n   area of %.3f", 
+			 sideLength, centerX, centerY, perimeter(), area());
+  }
+}
+[primiano@erdos proj2]$ cat Square.java
+/**
+ * The Square class is a class of two-dimensional shapes. Not
+ * surprisingly, the objects of this class are square.  A square is
+ * specified by its center and sidelength
+ *
+ * @version 1.0 28 Jan 2014
+ * @author Nicholas Primiano
+ */
+
+public class Square extends Shape2D {
+  private double sideLength = 0;
+
+  /**
+   * Zero-parameter constructor makes the origin the center of the
+   * square and makes the sidelength of the square zero.
+   */
+
+  public Square(){
+    this.centerX = 0;
+    this.centerY = 0;
+    this.sideLength = 0;
+  }
+
+  /**
+   * One-parameter constructor sets the sidelength, ands makes the
+   * origin the center of the square.
+   *
+   * @param sideLength the sidelength of the square
+   */
+
+  public Square(double sideLength) {
+    // super(0,0);
+    this.centerX = 0;
+    this.centerY = 0;
+    this.sideLength = sideLength;
+  }
+
+  /**
+   * Two-parameter constructor sets the center, and makes the
+   * sidelength of the square zero.
+   *
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate
+   */
+  
+  public Square(double centerX, double centerY){
+    // super(centerX, centerY);
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.sideLength = 0;
+  }
+
+  /**
+   * Three parameter constructor sets the sidelength and the center of
+   * the square.
+   *
+   * @param sideLength the sideLength of the square
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate 
+   */
+
+  public Square(double sideLength, double centerX, double centerY){
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.sideLength = sideLength;
+  }
+
+  /**
+   * Determine the square's sidelength.
+   *
+   * @return the sidelength of the square
+   */
+
+  public double getSideLength(double sideLength){
+    return sideLength;
+  }  
+ 
+  /**
+   * Determine the perimeter.
+   *
+   * @return the perimeter of the square
+   */
+
+  public double perimeter() {
+    // perimeter of a square 4 * sidelength
+    return 4 * sideLength;
+  }
+
+  /**
+   * Determine the square's area.
+   *
+   * @return the area of the square
+   */
+
+  public double area() {
+    return sideLength * sideLength;
+  }
+
+  /**
+   * Create a string verson of the square, suitable for (e.g.)
+   * printing
+   *
+   * @return the string representation of the square
+   */
+
+ public String toString() {
+    return String.format("Square with:\n   side length %.1f\n" +
+			 "   center at (%.1f, %.1f)\n" + 
+			 "   perimeter of %.3f \n   area of %.3f", 
+			 sideLength, centerX, centerY, perimeter(), area());
+  }
+}
+[primiano@erdos proj2]$ cat Circle.java
+/**
+ * The circle class is a class of two-dimensional shapes. Not
+ * suprisingly the objects of this class are circles.
+ * A cricle is a special specified by its center and radius.
+ *
+ * @version 1.0 28 Jan 2014
+ * @author Nicholas Primiano 
+ */
+
+public class Circle extends Shape2D {
+  
+  private double radius = 0;
+  private double centerX = 0;
+  private double centerY = 0;
+
+  /**
+   * Zero-parameter constructor makes the origin the center of the circle
+   * and makes the radius of the circle zero.
+   */
+
+  public Circle() {
+    this.radius = 0;
+    this.centerX = 0;
+    this.centerY = 0;
+  }
+
+  /**
+   * One-parameter constructor sets the radius, and makes the origin
+   * the center of the circle.
+   *
+   * @param radius the radius of the circle
+   */
+
+  public Circle(double radius) {
+    this.radius = radius;
+    this.centerX = 0;
+    this.centerY = 0;
+  }
+
+  /**
+   * Two-parameter constructor sets the center, and makes the radius of
+   * the circle zero.
+   *
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate
+   */
+  public Circle(double centerX, double centerY) {
+    this.radius = 0;
+    this.centerX = centerX;
+    this.centerY = centerY;
+  }
+
+  /**
+   * Three parameter constructor sets the radius and the center of the
+   * circle.
+   *
+   * @param radius the radius of the circle
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y coordinate
+   */
+
+  public Circle(double radius, double centerX, double centerY) {
+    this.radius = radius;
+    this.centerX = centerX;
+    this.centerY = centerY;
+  }
+
+  /**
+   * Determine the circle's radius
+   *
+   * @return the radius of the circle
+   */
+
+  public double getRadius(){
+    return radius;
+  }
+
+  /**
+   * Determine the circle's perimeter.
+   *
+   * @return the perimeter of the circle
+   */
+
+    public double perimeter() {
+      // perimeter of a circle 2*Pi*radius
+      return 2 * Math.PI * radius;
+  }
+
+  /**
+   * Determine the circle's area.
+   *
+   * @return the area of the circle
+   */
+
+    public double area() {
+      // area of a circle Pi*radius*radius
+      return Math.PI * radius * radius;
+  }
+
+  /**
+   * Create a string verson of the circle, suitable for (e.g.)
+   * printing
+   *
+   * @return the string representation of the circle
+   */
+
+    public String toString() {
+      return String.format("Cricle with:\n   radius %.1f\n"+
+			 "   center at (%.1f, %.1f)\n" + 
+			 "   perimeter of %.3f \n   area of %.3f", 
+			 radius, centerX, centerY, perimeter(), area());
+  }
+  
+}
+[primiano@erdos proj2]$ cat Shape3D.java
+/**
+ * An abstract class of three-dimensional shapes.
+ *
+ * @version 1.0 28 Jan 2014
+ * @author Nicholas Primiano
+ */
+
+public abstract class Shape3D extends Shape {
+  
+  protected double centerX = 0;
+  protected double centerY = 0;
+  protected double centerZ = 0;
+  
+  /**
+   * Zero-parameter constructor sets the center to be the origin (0.0,0.0,0.0).
+   */
+
+  public Shape3D(){
+    this.centerX = 0;
+    this.centerY = 0;
+    this.centerZ = 0;
+  }
+  
+  /**
+   * Three-parameter constructor allows user to specify the center's
+   * x-, y-, and the z-coordinates.
+   *
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinates
+   * @param centerZ the center's z-coordinate
+   */
+
+  public Shape3D(double centerX, double centerY, double centerZ){
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.centerZ = centerZ;
+  }
+
+  /**
+   * Get the center's x-coordinate.
+   *
+   * @return x-coordinate of the center
+   */
+
+  public double getCenterX(){
+    return centerX;
+  }
+
+  /**
+   * Get the center's y-coordinate
+   *
+   * @return y-coordinate of the center
+   */
+
+  public double getCenterY(){
+    return centerY;
+  }
+
+  /** 
+   * Get the cenr;s z-coordinate.
+   *
+   * @return z-coordinate of the center
+   */
+  
+  public double getCenterZ(){
+    return centerZ;
+  }
+  
+  /**
+   * Abstract method that computes the surface area of a
+   * two-dimnsional shape.
+   *
+   * @return the area of the shape
+   */
+
+  public abstract double area();
+  
+  /**
+   * Abstract method that computes the volume of a two-dimensional
+   * shape.
+   *
+   * @return the volume of the shape
+   */  
+
+  public abstract double volume();
+}
+[primiano@erdos proj2]$ Cube.jaba
+Cube.jaba: Command not found.
+[primiano@erdos proj2]$ cat Shpere.java
+cat: Shpere.java: No such file or directory
+[primiano@erdos proj2]$ cat Cube.java
+/**
+ * The Cube class is a class of three-dimensional shapes. Not
+ * suprisingly, the objects of this class are cubes. A cube is
+ * specified by its center and sidelength.
+ * 
+ * @version 1.0 28 Jan 2014 
+ * @author Nicholas Primiano
+ */
+
+public class Cube extends Shape3D {
+  
+  private double sideLength = 0;
+
+  /**
+   * Zero-parameter constructor makes the origin the center of the cube
+   * and makes the sidelength of the cube zero.
+   */
+  
+  public Cube() {
+    this.centerX = 0;
+    this.centerY = 0;
+    this.centerZ = 0;
+    this.sideLength = 0;
+  }
+  
+  /** 
+   * One-parameter constructor sets the sidelength, and makes
+   * the origin the center of the cube.
+   *
+   * @param sideLength the sidelength of the cube
+   */
+
+  public Cube(double sideLength) {
+    this.centerX = 0;
+    this.centerY = 0;
+    this.centerZ = 0;
+    this.sideLength = sideLength;
+  }
+  
+  /**
+   * Three-parameter constructor sets the center, and makes the 
+   * sidelength of the cube zero.
+   *
+   * @param centerX the center's x-coordinate 
+   * @param centerY the center's y-coordinate
+   * @param centerZ the center's z-coordinate
+   */
+
+  public Cube(double centerX, double centerY, double centerZ){
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.centerZ = centerZ;
+    this.sideLength = 0;
+  }
+  
+  /**
+   * Four-parameter constructor sets the sidelength and the center of
+   * the cube.
+   *
+   * @param sideLength the sidelength of the cube
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate
+   * @param centerZ the center's z-coordinate
+   */
+
+  public Cube(double sideLength, double centerX, double centerY, double centerZ){
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.centerZ = centerZ;
+    this.sideLength = sideLength;
+  }
+  
+  /**
+   * Determine the cube's sidelength.
+   *
+   * @return the sidelength of the cube.
+   */
+
+  public double getSideLength(){
+    return sideLength;
+  }
+
+  /**
+   * Determine the cube's surface area.
+   *
+   * @return the surface area of the cube.
+   */
+
+  public double area() {
+    // surface area of a cube 6 * sidelength * sidelength
+    return 6 * sideLength * sideLength; 
+  }
+
+  /**
+   * Determine the cube's volume.
+   *
+   * @return the volume of the cube.
+   */
+
+  public double volume() {
+    return sideLength * sideLength * sideLength;
+  }
+
+  /**
+   * Create a string version of the cube, suitable for (e.g.) printing
+   *
+   * @return the stxring representation of the cube.
+   */
+
+  public String toString() {
+    return String.format("Cube with:\n   side length %.1f\n" +
+			 "   center at (%.1f, %.1f, %.1f)\n" + 
+			 "   area of %.3f \n   volume of %.3f", 
+			 sideLength, centerX, centerY, centerZ, area(), volume());
+  }
+}
+[primiano@erdos proj2]$ cat Sphere.java
+/**
+ * The Sphere is a class of three-dimensional shapes. Not
+ * surprisingly, the objects of this class are sphere. A sphere is
+ * specified by its center and radius.
+ *
+ * @version 1.0 28 Jan 2014
+ * @author Nicholas Primiano
+ */
+
+public class Sphere extends Shape3D {
+
+  private double radius = 0;
+  private double centerX = 0;
+  private double centerY = 0;
+  private double centerZ = 0;
+
+  /**
+   * Zero-parameter constructor makes the origin the center of the
+   * sphere and makes the radius of the sphere zero.
+   */
+  
+  public Sphere() {
+    this.radius = 0;
+    this.centerX = 0;
+    this.centerY = 0;
+    this.centerZ = 0;
+  }
+  
+  /**
+   * One-parameter constructor sets the radius, and makes the origin
+   * the center of the sphere.
+   *
+   * @param radius the radius of the sphere
+   */
+
+  public Sphere(double radius) {
+    this.centerX = 0;
+    this.centerY = 0;
+    this.centerZ = 0;
+    this.radius = radius;
+  }
+
+  /**
+   * Three-parameter constructor sets the center, and makes the radius
+   * of the sphere zero.
+   *
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate
+   * @param centerZ the center's z-coordinate
+   */
+
+  public Sphere(double centerX, double centerY, double centerZ) {
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.centerZ = centerZ; 
+    this.radius = 0;
+  }
+  
+  /**
+   * Four-parameter constructor sets the radius and the center of the
+   * sphere.
+   *
+   * @param radius the radius of the sphere
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate
+   * @param centerZ the center's z-coordinate
+   */
+
+  public Sphere(double radius, double centerX, double centerY, double centerZ) {
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.centerZ = centerZ;
+    this.radius = radius;
+  }
+
+  /**
+   * Determine the sphere's radius.
+   *
+   * @return the radius of the sphere
+   */
+  
+  public double getRadius(){
+    return radius;
+  }
+
+  /**
+   * Determine the sphere's area.
+   *
+   * @return the surface area of the sphere
+   */
+
+  public double area() {
+    // surface area of a sphere
+    return (4 * Math.PI * radius * radius);
+  }
+
+  /**
+   * Determine the sphere's volume.
+   *
+   * @return the volume of sphere
+   */
+
+  public double volume() {
+    // volume of a sphere
+    return (4 * Math.PI * radius * radius * radius) / 3;
+  }
+  /**
+   * Create a string version of the sphere, suitable for (e.g.)
+   * printing
+   *
+   * @return the string representation of the sphere
+   */
+  
+  public String toString() {
+    return String.format("Sphere with:\n   radius %.1f\n"
+			 +"   center at (%.1f, %.1f, %.1f)\n" + 
+			 "   area of %.3f \n   volume of %.3f", 
+			 radius, centerX, centerY, centerZ, area(), volume());
+  }
+}
+[primiano@erdos proj2]$ exit
+exit
+
+Script done on Thu 20 Feb 2014 11:42:50 PM EST

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ASCII"?>
+<application:Application xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:advanced="http://www.eclipse.org/ui/2010/UIModel/application/ui/advanced" xmlns:application="http://www.eclipse.org/ui/2010/UIModel/application" xmlns:basic="http://www.eclipse.org/ui/2010/UIModel/application/ui/basic" xmlns:menu="http://www.eclipse.org/ui/2010/UIModel/application/ui/menu" xmi:id="_GtXXkYuqEeO-dMz5_vGZGA" elementId="org.eclipse.e4.legacy.ide.application" contributorURI="platform:/plugin/org.eclipse.platform" selectedElement="_GtXXkouqEeO-dMz5_vGZGA" bindingContexts="_GtX-oIuqEeO-dMz5_vGZGA">
+  <persistedState key="memento" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;workbench>&#xA;&lt;mruList/>&#xA;&lt;/workbench>"/>
+  <tags>activeSchemeId:org.eclipse.ui.defaultAcceleratorConfiguration</tags>
+  <tags>ModelMigrationProcessor.001</tags>
+  <children xsi:type="basic:TrimmedWindow" xmi:id="_GtXXkouqEeO-dMz5_vGZGA" elementId="IDEWindow" contributorURI="platform:/plugin/org.eclipse.platform" selectedElement="_HRZRsYuqEeO-dMz5_vGZGA" label="%trimmedwindow.label.eclipseSDK" x="174" y="51" width="1020" height="768">
+    <persistedState key="coolBarVisible" value="true"/>
+    <persistedState key="perspectiveBarVisible" value="true"/>
+    <persistedState key="workingSets" value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xA;&lt;workingSets/>"/>
+    <persistedState key="aggregateWorkingSetId" value="Aggregate for window 1391304855947"/>
+    <tags>topLevel</tags>
+    <children xsi:type="basic:PartSashContainer" xmi:id="_HRZRsYuqEeO-dMz5_vGZGA" selectedElement="_HRaf0IuqEeO-dMz5_vGZGA" horizontal="true">
+      <children xsi:type="advanced:PerspectiveStack" xmi:id="_HRaf0IuqEeO-dMz5_vGZGA" elementId="PerspectiveStack" containerData="7500" selectedElement="_HrKckYuqEeO-dMz5_vGZGA">
+        <children xsi:type="advanced:Perspective" xmi:id="_HrKckYuqEeO-dMz5_vGZGA" elementId="org.eclipse.ui.resourcePerspective" selectedElement="_HrLDoIuqEeO-dMz5_vGZGA" label="Resource" iconURI="platform:/plugin/org.eclipse.ui.ide.application/icons/full/eview16/resource_persp.gif">
+          <persistedState key="persp.hiddenItems" value="persp.hideToolbarSC:org.eclipse.debug.ui.commands.RunToLine,persp.hideToolbarSC:org.eclipse.jdt.ui.actions.OpenProjectWizard,persp.hideToolbarSC:org.eclipse.ui.edit.text.toggleShowSelectedElementOnly,"/>
+          <tags>persp.actionSet:org.eclipse.ui.cheatsheets.actionSet</tags>
+          <tags>persp.actionSet:org.eclipse.search.searchActionSet</tags>
+          <tags>persp.actionSet:org.eclipse.ui.edit.text.actionSet.annotationNavigation</tags>
+          <tags>persp.actionSet:org.eclipse.ui.edit.text.actionSet.navigation</tags>
+          <tags>persp.actionSet:org.eclipse.ui.edit.text.actionSet.convertLineDelimitersTo</tags>
+          <tags>persp.actionSet:org.eclipse.ui.externaltools.ExternalToolsSet</tags>
+          <tags>persp.actionSet:org.eclipse.ui.actionSet.keyBindings</tags>
+          <tags>persp.actionSet:org.eclipse.ui.actionSet.openFiles</tags>
+          <tags>persp.actionSet:org.eclipse.mylyn.context.ui.actionSet</tags>
+          <tags>persp.actionSet:org.eclipse.mylyn.doc.actionSet</tags>
+          <tags>persp.actionSet:org.eclipse.mylyn.tasks.ui.navigation</tags>
+          <tags>persp.actionSet:org.eclipse.ptp.debug.ui.debugActionSet</tags>
+          <tags>persp.actionSet:org.eclipse.rse.core.search.searchActionSet</tags>
+          <tags>persp.newWizSC:org.eclipse.ui.wizards.new.folder</tags>
+          <tags>persp.newWizSC:org.eclipse.ui.wizards.new.file</tags>
+          <tags>persp.viewSC:org.eclipse.ui.navigator.ProjectExplorer</tags>
+          <tags>persp.viewSC:org.eclipse.ui.views.BookmarkView</tags>
+          <tags>persp.viewSC:org.eclipse.ui.views.ContentOutline</tags>
+          <tags>persp.viewSC:org.eclipse.ui.views.PropertySheet</tags>
+          <tags>persp.viewSC:org.eclipse.ui.views.ProblemView</tags>
+          <tags>persp.viewSC:org.eclipse.ui.views.ProgressView</tags>
+          <tags>persp.viewSC:org.eclipse.ui.views.TaskList</tags>
+          <tags>persp.actionSet:org.eclipse.ui.NavigateActionSet</tags>
+          <tags>persp.viewSC:org.eclipse.ant.ui.views.AntView</tags>
+          <tags>persp.perspSC:org.eclipse.cdt.ui.CPerspective</tags>
+          <tags>persp.showIn:org.eclipse.egit.ui.RepositoriesView</tags>
+          <tags>persp.perspSC:org.eclipse.jdt.ui.JavaPerspective</tags>
+          <tags>persp.perspSC:org.eclipse.jdt.ui.JavaBrowsingPerspective</tags>
+          <tags>persp.viewSC:org.eclipse.mylyn.tasks.ui.views.tasks</tags>
+          <tags>persp.newWizSC:org.eclipse.mylyn.tasks.ui.wizards.new.repository.task</tags>
+          <tags>persp.perspSC:org.eclipse.ptp.debug.ui.PTPDebugPerspective</tags>
+          <tags>persp.perspSC:org.eclipse.team.cvs.ui.cvsPerspective</tags>
+          <tags>persp.perspSC:org.eclipse.team.ui.TeamSynchronizingPerspective</tags>
+          <tags>persp.showIn:org.eclipse.team.ui.GenericHistoryView</tags>
+          <tags>persp.newWizSC:org.eclipse.ui.editors.wizards.UntitledTextFileWizard</tags>
+          <tags>persp.showIn:org.eclipse.ui.navigator.ProjectExplorer</tags>
+          <tags>persp.viewSC:org.eclipse.pde.runtime.LogView</tags>
+          <tags>persp.perspSC:org.tigris.subversion.subclipse.ui.svnPerspective</tags>
+          <children xsi:type="basic:PartSashContainer" xmi:id="_HrLDoIuqEeO-dMz5_vGZGA" selectedElement="_HrLDoYuqEeO-dMz5_vGZGA" horizontal="true">
+            <children xsi:type="basic:PartSashContainer" xmi:id="_HrLDoYuqEeO-dMz5_vGZGA" containerData="2600" selectedElement="_HrLDoouqEeO-dMz5_vGZGA">
+              <children xsi:type="basic:PartStack" xmi:id="_HrLDoouqEeO-dMz5_vGZGA" elementId="topLeft" containerData="5000" selectedElement="_HrLDo4uqEeO-dMz5_vGZGA">
+                <tags>newtablook</tags>
+                <tags>org.eclipse.e4.primaryNavigationStack</tags>
+                <children xsi:type="advanced:Placeholder" xmi:id="_HrLDo4uqEeO-dMz5_vGZGA" elementId="org.eclipse.ui.navigator.ProjectExplorer" ref="_HrB5sIuqEeO-dMz5_vGZGA"/>
+                <children xsi:type="advanced:Placeholder" xmi:id="_HrLDpIuqEeO-dMz5_vGZGA" elementId="org.eclipse.ui.views.BookmarkView" toBeRendered="false" ref="_HrDu4IuqEeO-dMz5_vGZGA"/>
+                <children xsi:type="advanced:Placeholder" xmi:id="_HrLDpYuqEeO-dMz5_vGZGA" elementId="org.eclipse.ui.views.ResourceNavigator" toBeRendered="false" ref="_HrEV8IuqEeO-dMz5_vGZGA"/>
+                <children xsi:type="advanced:Placeholder" xmi:id="_HrLDpouqEeO-dMz5_vGZGA" elementId="org.eclipse.team.ccvs.ui.RepositoriesView" toBeRendered="false" ref="_HrJOcYuqEeO-dMz5_vGZGA"/>
+                <children xsi:type="advanced:Placeholder" xmi:id="_HrLDp4uqEeO-dMz5_vGZGA" elementId="org.tigris.subversion.subclipse.ui.repository.RepositoriesView" toBeRendered="false" ref="_HrJ1gIuqEeO-dMz5_vGZGA"/>
+                <children xsi:type="advanced:Placeholder" xmi:id="_HrLqsIuqEeO-dMz5_vGZGA" elementId="org.tigris.subversion.subclipse.ui.annotations.AnnotateView" toBeRendered="false" ref="_HrKckIuqEeO-dMz5_vGZGA"/>
+              </children>
+              <children xsi:type="basic:PartStack" xmi:id="_HrLqsYuqEeO-dMz5_vGZGA" elementId="bottomLeft" containerData="5000" selectedElement="_HrLqsouqEeO-dMz5_vGZGA">
+                <tags>newtablook</tags>
+                <tags>org.eclipse.e4.secondaryNavigationStack</tags>
+                <children xsi:type="advanced:Placeholder" xmi:id="_HrLqsouqEeO-dMz5_vGZGA" elementId="org.eclipse.ui.views.ContentOutline" ref="_HrEV8YuqEeO-dMz5_vGZGA"/>
+                <children xsi:type="advanced:Placeholder" xmi:id="_HrLqs4uqEeO-dMz5_vGZGA" elementId="org.eclipse.ant.ui.views.AntView" toBeRendered="false" ref="_HrGyMIuqEeO-dMz5_vGZGA"/>
+                <children xsi:type="advanced:Placeholder" xmi:id="_HrLqtIuqEeO-dMz5_vGZGA" elementId="org.eclipse.mylyn.tasks.ui.views.tasks" ref="_HrIAUIuqEeO-dMz5_vGZGA"/>
+              </children>
+            </children>
+            <children xsi:type="basic:PartSashContainer" xmi:id="_HrLqtYuqEeO-dMz5_vGZGA" containerData="740

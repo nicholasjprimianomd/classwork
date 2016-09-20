@@ -1,0 +1,240 @@
+Script started on Thu 12 Dec 2013 03:43:10 PM EST
+]0;primiano@erdos:proj5[primiano@erdos proj5]$ cat proj5.cc
+/**********************************************************************
+ *
+ * Project 5: Timing Has Come Today
+ *
+ * Author: Nicholas Primiano <nprimiano@fordham.edu>
+ * Date: 9 December 2013
+ *
+ * Determine time it takes in order to insert data into different 
+ * containers.
+ * 
+ ********************************************************************/
+
+#include <algorithm>
+#include <iomanip>
+#include <iostream>
+#include <list>
+#include <set>
+#include <vector>
+
+using namespace std;
+
+// inserter for timing
+typedef void Inserter(const vector<double>&);
+//  insert data to list
+void insert_list(const vector <double>  & data);
+// insert data to vector
+void insert_vector(const vector <double>  & data);
+// insert data to set
+void insert_set(const vector <double>  & data);
+//  time insertion for list, vector, and set
+void insert_time(Inserter f, const vector <double> &data);
+// generate random data
+vector<double> gen_data(int elts);
+
+// class to check for ordered insertion
+class Larger_than {
+    double v;
+public:
+    Larger_than(double vv):v(vv){}
+    bool operator()(double x) const {return x > v;}
+    
+};
+
+int main()
+{   
+    srand(time(0)); // initialize random number generator
+    int num_elts;   //  number of random elements
+    cout << "How many elements for container? ";
+    // get number of random elements
+    while (cin >> num_elts) { 
+	if (num_elts <= 0) {
+	    cout << "Asking for empty container---ignored." << endl;
+	}
+	else {
+	    // check time it takes to fill each container
+	    vector<double> data = gen_data(num_elts);
+	    insert_time(insert_list, data);
+	    insert_time(insert_set, data);		 
+	    insert_time(insert_vector, data);
+	}
+	// ask for input again
+	cout << "How many elements for next container? ";
+    }
+    cout << endl;
+}
+
+// generate num_elts random numbers in the range [0.0, 1.0),
+// which are returned in a vector
+vector<double> gen_data(int num_elts) 
+{
+    vector<double> result;
+    for (int i = 0; i < num_elts; i++) {
+	double datum = 1.0* rand()/RAND_MAX;
+	result.push_back(datum);
+    }
+    return result;
+}
+// insert sorted data to a list
+void insert_list(const vector <double> & data)
+{
+    cout << "Inserting for list" << endl;
+    list <double> p;
+    for (unsigned int i = 0; i < data.size(); i++) {
+	p.insert(find_if(p.begin(), p.end(), Larger_than(i)), i);
+    }
+    cout << "Check: ";
+    if (is_sorted(p.begin(),p.end())) {
+	cout << "list is sorted" << endl;
+    }
+    else {
+	cout << "list is not sorted" << endl;
+    } 
+}
+// insert sorted data to a set
+void insert_set(const vector <double> &data)
+{
+    cout << "Inserting for set" << endl;
+    set <double> p;
+    for (unsigned int i = 0; i < data.size(); i++) {
+	p.insert(i);
+    }
+}
+// insert sorted data to a vector
+void insert_vector(const vector <double> &data)
+{
+    cout << "Inserting for vector" << endl;
+    vector <double> p;
+    for (unsigned int i = 0; i < data.size(); i++) {
+	p.insert(find_if(p.begin(), p.end(), Larger_than(i)), i);
+    }
+    cout << "Check: ";
+    if (is_sorted(p.begin(),p.end())) {
+	cout << "vector is sorted" << endl;
+    }
+    else {
+	cout << "vector is not sorted" << endl;
+    } 
+}
+
+void insert_time(Inserter timer, const vector <double> &data)
+{
+    clock_t t1 = clock();
+    if (t1 == clock_t(-1)) { // clock_t(-1) means "clock() didn’t work"
+	cerr << "sorry, no clock\n";
+	exit(1);
+    }
+    // time each insertion (list, vector, then set)
+    timer(data);
+    clock_t t2 = clock();
+    if (t2 == clock_t(-1)) {
+	cerr << "sorry, clock overflow\n";
+	exit(2);
+    }
+    // print times
+    cout << "Elapsed time: " << fixed << setprecision(2)
+	 << static_cast<double>(t2 - t1)/CLOCKS_PER_SEC << " seconds\n" << endl;
+}
+
+
+]0;primiano@erdos:proj5[primiano@erdos proj5]$ make clean
+rm -rf  *.o  *~ core* \#*\#
+]0;primiano@erdos:proj5[primiano@erdos proj5]$ make
+g++ -I/usr/local/include/bjarne -std=c++11 -Wall -pedantic   -c -o proj5.o proj5.cc
+g++ -I/usr/local/include/bjarne -std=c++11 -Wall -pedantic -o proj5  proj5.o 
+]0;primiano@erdos:proj5[primiano@erdos proj5]$ proj5
+How many elements for container? -1
+Asking for empty container---ignored.
+How many elements for next container? 0
+Asking for empty container---ignored.
+How many elements for next container? 1
+Inserting for list
+Check: list is sorted
+Elapsed time: 0.00 seconds
+
+Inserting for set
+Elapsed time: 0.00 seconds
+
+Inserting for vector
+Check: vector is sorted
+Elapsed time: 0.00 seconds
+
+How many elements for next container? 10
+Inserting for list
+Check: list is sorted
+Elapsed time: 0.00 seconds
+
+Inserting for set
+Elapsed time: 0.00 seconds
+
+Inserting for vector
+Check: vector is sorted
+Elapsed time: 0.00 seconds
+
+How many elements for next container? 100
+Inserting for list
+Check: list is sorted
+Elapsed time: 0.00 seconds
+
+Inserting for set
+Elapsed time: 0.00 seconds
+
+Inserting for vector
+Check: vector is sorted
+Elapsed time: 0.00 seconds
+
+How many elements for next container? 1000
+Inserting for list
+Check: list is sorted
+Elapsed time: 0.01 seconds
+
+Inserting for set
+Elapsed time: 0.00 seconds
+
+Inserting for vector
+Check: vector is sorted
+Elapsed time: 0.01 seconds
+
+How many elements for next container? 5000
+Inserting for list
+Check: list is sorted
+Elapsed time: 0.17 seconds
+
+Inserting for set
+Elapsed time: 0.00 seconds
+
+Inserting for vector
+Check: vector is sorted
+Elapsed time: 0.12 seconds
+
+How many elements for next container? 10000
+Inserting for list
+Check: list is sorted
+Elapsed time: 0.67 seconds
+
+Inserting for set
+Elapsed time: 0.01 seconds
+
+Inserting for vector
+Check: vector is sorted
+Elapsed time: 0.49 seconds
+
+How many elements for next container? 50000
+Inserting for list
+Check: list is sorted
+Elapsed time: 16.66 seconds
+
+Inserting for set
+Elapsed time: 0.03 seconds
+
+Inserting for vector
+Check: vector is sorted
+Elapsed time: 12.51 seconds
+
+How many elements for next container? ^C
+]0;primiano@erdos:proj5[primiano@erdos proj5]$ exit
+exit
+
+Script done on Thu 12 Dec 2013 03:45:09 PM EST

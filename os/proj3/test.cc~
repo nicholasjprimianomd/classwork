@@ -1,0 +1,11 @@
+int main(){
+
+    int* p = 5;
+
+
+    cout << p;
+
+    cout << *p;  //dereferance p
+
+
+}

@@ -1,0 +1,249 @@
+Script started on Tue 10 Dec 2013 12:54:09 AM EST
+]0;primiano@erdos:proj3[primiano@erdos proj3]$ cat proj3.cc
+/**********************************************************************
+ *
+ * Project 3: Analtzing the LRU Algorithm
+ *
+ * Author: Nicholas Primiano <nprimiano@fordham.edu>
+ * Date: 9 December 2013
+ *
+ * Calculate and print number of page faults for a given referance
+ * string using the LRU page replacement algorithm.
+ * 
+ ********************************************************************/
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// find an element in the memory vector
+int find(int x, vector <int>& memory);
+// checks for page faults
+bool find_fault(int x, int physical_mem, vector <int> &memory, int & page_faults);
+// prints stack and page fault
+void print_stack(bool page_fault, int physical_mem,
+		 int virtual_mem, const vector <int> & memory);
+
+int main()
+{   
+    // size of physical memory
+    int physical_mem;
+    // size of virtual or all memory
+    int virtual_mem;
+    // vector to hold all memory elements
+    vector <int> memory;
+    // page fault counter
+    int page_faults; 
+
+    // read in amout of physical memory and virtual memory
+    cin >> physical_mem >> virtual_mem;
+    cout << "Stack: " << endl;
+    // read in memory elements from reference string 
+    int input;
+    while (cin >> input) {
+	bool page_fault = find_fault(input, physical_mem, memory, page_faults);   
+	print_stack(page_fault, physical_mem, virtual_mem, memory);
+
+    }	
+    cout << endl;
+    cout << "Page Faults: " << page_faults << endl;
+}
+
+// add page faults, move memory and new elements
+bool find_fault(int input, int physical_mem, vector <int> &memory, int & page_faults)
+{   
+    int x_index = find(input, memory);
+    // if x_index is not in memory add a 
+    // page fault and add input to memory 
+    if (x_index == -1) {
+	page_faults++;
+	memory.push_back(input);
+	x_index = memory.size()-1;
+	// move elements in memory and make input memory[0]
+	for (int i = x_index; i > 0; i--)
+	    memory[i] = memory[i-1];	
+	memory[0] = input;
+	return true;
+    } 
+    else {
+	// if index is in virtual memory add a page fault
+	if (x_index >= physical_mem)
+	    page_faults++;	
+	// move elements in memory and make input memory[0]
+	for (int i = x_index; i > 0 ; i--)
+	    memory[i] = memory[i-1];
+	memory[0] = input;
+	return (x_index >= physical_mem);
+    }
+    
+}
+ 
+// check if input is already in memory
+int find(int input, vector <int>& memory)
+{
+    for (unsigned int i = 0 ; i < memory.size(); i++)
+	if (input == memory[i])
+	    return i;
+    // return -1 if input is not in memory
+    return -1;
+}
+
+// print stack and page faults
+void print_stack(bool page_fault, int physical_mem, 
+		 int virtual_mem, const vector <int> & memory)
+{
+    for (int i = 0; i < virtual_mem; i++) {
+	// print memory elements
+	if ((unsigned int) i < memory.size())
+	    cout << " " <<  memory[i] <<  " ";
+	//  print a "-" if there is no number element to print
+	else
+	    cout <<" _ ";
+	// print "|" between physical and virtual memory
+	if (i == physical_mem)
+	    cout <<" | ";
+    }
+    // print "P" at the end of a line if there is a page fault
+    if (page_fault)
+	cout << " P";    
+    cout << endl;
+}
+
+
+]0;primiano@erdos:proj3[primiano@erdos proj3]$ g++ proj3.cc -o proj3 -Wall
+]0;primiano@erdos:proj3[primiano@erdos proj3]$ proj3 < dd[Kata1
+Stack: 
+ 0  _  _  _  _  |  _  _  _  P
+ 2  0  _  _  _  |  _  _  _  P
+ 1  2  0  _  _  |  _  _  _  P
+ 3  1  2  0  _  |  _  _  _  P
+ 5  3  1  2  0  |  _  _  _  P
+ 4  5  3  1  2  |  0  _  _  P
+ 6  4  5  3  1  |  2  0  _  P
+ 3  6  4  5  1  |  2  0  _ 
+ 7  3  6  4  5  |  1  2  0  P
+ 4  7  3  6  5  |  1  2  0 
+ 7  4  3  6  5  |  1  2  0 
+ 3  7  4  6  5  |  1  2  0 
+ 3  7  4  6  5  |  1  2  0 
+ 5  3  7  4  6  |  1  2  0  P
+ 5  3  7  4  6  |  1  2  0 
+ 3  5  7  4  6  |  1  2  0 
+ 1  3  5  7  4  |  6  2  0  P
+ 1  3  5  7  4  |  6  2  0 
+ 1  3  5  7  4  |  6  2  0 
+ 7  1  3  5  4  |  6  2  0 
+ 1  7  3  5  4  |  6  2  0 
+ 3  1  7  5  4  |  6  2  0 
+ 4  3  1  7  5  |  6  2  0  P
+ 1  4  3  7  5  |  6  2  0 
+
+Page Faults: 11
+]0;primiano@erdos:proj3[primiano@erdos proj3]$ proj3 <data2[K[K[K[K[K data2
+Stack: 
+ 8  _  _  _  _  _  |  _  _  _  _  P
+ 8  _  _  _  _  _  |  _  _  _  _ 
+ 5  8  _  _  _  _  |  _  _  _  _  P
+ 5  8  _  _  _  _  |  _  _  _  _ 
+ 0  5  8  _  _  _  |  _  _  _  _  P
+ 1  0  5  8  _  _  |  _  _  _  _  P
+ 2  1  0  5  8  _  |  _  _  _  _  P
+ 9  2  1  0  5  8  |  _  _  _  _  P
+ 4  9  2  1  0  5  |  8  _  _  _  P
+ 1  4  9  2  0  5  |  8  _  _  _ 
+ 3  1  4  9  2  0  |  5  8  _  _  P
+ 3  1  4  9  2  0  |  5  8  _  _ 
+ 4  3  1  9  2  0  |  5  8  _  _ 
+ 0  4  3  1  9  2  |  5  8  _  _  P
+ 1  0  4  3  9  2  |  5  8  _  _ 
+ 9  1  0  4  3  2  |  5  8  _  _ 
+ 6  9  1  0  4  3  |  2  5  8  _  P
+ 7  6  9  1  0  4  |  3  2  5  8  P
+ 8  7  6  9  1  0  |  4  3  2  5  P
+ 2  8  7  6  9  1  |  0  4  3  5  P
+ 5  2  8  7  6  9  |  1  0  4  3  P
+ 9  5  2  8  7  6  |  1  0  4  3  P
+ 8  9  5  2  7  6  |  1  0  4  3 
+ 2  8  9  5  7  6  |  1  0  4  3 
+ 8  2  9  5  7  6  |  1  0  4  3 
+ 2  8  9  5  7  6  |  1  0  4  3 
+ 6  2  8  9  5  7  |  1  0  4  3  P
+ 6  2  8  9  5  7  |  1  0  4  3 
+ 2  6  8  9  5  7  |  1  0  4  3 
+ 9  2  6  8  5  7  |  1  0  4  3 
+ 0  9  2  6  8  5  |  7  1  4  3  P
+ 9  0  2  6  8  5  |  7  1  4  3 
+ 5  9  0  2  6  8  |  7  1  4  3  P
+ 4  5  9  0  2  6  |  8  7  1  3  P
+ 8  4  5  9  0  2  |  6  7  1  3  P
+ 9  8  4  5  0  2  |  6  7  1  3 
+ 8  9  4  5  0  2  |  6  7  1  3 
+ 2  8  9  4  5  0  |  6  7  1  3  P
+ 4  2  8  9  5  0  |  6  7  1  3 
+ 7  4  2  8  9  5  |  0  6  1  3  P
+ 9  7  4  2  8  5  |  0  6  1  3 
+ 5  9  7  4  2  8  |  0  6  1  3  P
+ 4  5  9  7  2  8  |  0  6  1  3 
+ 9  4  5  7  2  8  |  0  6  1  3 
+ 6  9  4  5  7  2  |  8  0  1  3  P
+ 3  6  9  4  5  7  |  2  8  0  1  P
+ 9  3  6  4  5  7  |  2  8  0  1 
+ 3  9  6  4  5  7  |  2  8  0  1 
+ 9  3  6  4  5  7  |  2  8  0  1 
+ 7  9  3  6  4  5  |  2  8  0  1  P
+ 8  7  9  3  6  4  |  5  2  0  1  P
+ 3  8  7  9  6  4  |  5  2  0  1 
+ 0  3  8  7  9  6  |  4  5  2  1  P
+ 2  0  3  8  7  9  |  6  4  5  1  P
+ 3  2  0  8  7  9  |  6  4  5  1 
+ 5  3  2  0  8  7  |  9  6  4  1  P
+ 8  5  3  2  0  7  |  9  6  4  1 
+ 7  8  5  3  2  0  |  9  6  4  1  P
+ 7  8  5  3  2  0  |  9  6  4  1 
+ 3  7  8  5  2  0  |  9  6  4  1 
+ 9  3  7  8  5  2  |  0  6  4  1  P
+ 1  9  3  7  8  5  |  2  0  6  4  P
+ 8  1  9  3  7  5  |  2  0  6  4 
+ 0  8  1  9  3  7  |  5  2  6  4  P
+ 3  0  8  1  9  7  |  5  2  6  4 
+ 5  3  0  8  1  9  |  7  2  6  4  P
+ 9  5  3  0  8  1  |  7  2  6  4  P
+ 4  9  5  3  0  8  |  1  7  2  6  P
+ 3  4  9  5  0  8  |  1  7  2  6 
+ 7  3  4  9  5  0  |  8  1  2  6  P
+ 7  3  4  9  5  0  |  8  1  2  6 
+ 7  3  4  9  5  0  |  8  1  2  6 
+ 9  7  3  4  5  0  |  8  1  2  6 
+ 3  9  7  4  5  0  |  8  1  2  6 
+ 1  3  9  7  4  5  |  0  8  2  6  P
+ 6  1  3  9  7  4  |  5  0  8  2  P
+ 3  6  1  9  7  4  |  5  0  8  2 
+ 2  3  6  1  9  7  |  4  5  0  8  P
+ 2  3  6  1  9  7  |  4  5  0  8 
+ 2  3  6  1  9  7  |  4  5  0  8 
+ 5  2  3  6  1  9  |  7  4  0  8  P
+ 6  5  2  3  1  9  |  7  4  0  8 
+ 9  6  5  2  3  1  |  7  4  0  8  P
+ 6  9  5  2  3  1  |  7  4  0  8 
+ 8  6  9  5  2  3  |  1  7  4  0  P
+ 6  8  9  5  2  3  |  1  7  4  0 
+ 6  8  9  5  2  3  |  1  7  4  0 
+ 0  6  8  9  5  2  |  3  1  7  4  P
+ 4  0  6  8  9  5  |  2  3  1  7  P
+ 4  0  6  8  9  5  |  2  3  1  7 
+ 8  4  0  6  9  5  |  2  3  1  7 
+ 8  4  0  6  9  5  |  2  3  1  7 
+ 8  4  0  6  9  5  |  2  3  1  7 
+ 9  8  4  0  6  5  |  2  3  1  7 
+ 8  9  4  0  6  5  |  2  3  1  7 
+ 9  8  4  0  6  5  |  2  3  1  7 
+ 4  9  8  0  6  5  |  2  3  1  7 
+ 8  4  9  0  6  5  |  2  3  1  7 
+ 7  8  4  9  0  6  |  5  2  3  1  P
+ 4  7  8  9  0  6  |  5  2  3  1 
+
+Page Faults: 47
+]0;primiano@erdos:proj3[primiano@erdos proj3]$ exit
+exit
+
+Script done on Tue 10 Dec 2013 12:55:38 AM EST

@@ -1,0 +1,120 @@
+/**
+ * The Sphere is a class of three-dimensional shapes. Not
+ * surprisingly, the objects of this class are sphere. A sphere is
+ * specified by its center and radius.
+ *
+ * @version 1.0 28 Jan 2014
+ * @author Nicholas Primiano
+ */
+
+public class Sphere extends Shape3D {
+
+  private double radius = 0;
+  private double centerX = 0;
+  private double centerY = 0;
+  private double centerZ = 0;
+
+  /**
+   * Zero-parameter constructor makes the origin the center of the
+   * sphere and makes the radius of the sphere zero.
+   */
+  
+  public Sphere() {
+    this.radius = 0;
+    this.centerX = 0;
+    this.centerY = 0;
+    this.centerZ = 0;
+  }
+  
+  /**
+   * One-parameter constructor sets the radius, and makes the origin
+   * the center of the sphere.
+   *
+   * @param radius the radius of the sphere
+   */
+
+  public Sphere(double radius) {
+    this.centerX = 0;
+    this.centerY = 0;
+    this.centerZ = 0;
+    this.radius = radius;
+  }
+
+  /**
+   * Three-parameter constructor sets the center, and makes the radius
+   * of the sphere zero.
+   *
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate
+   * @param centerZ the center's z-coordinate
+   */
+
+  public Sphere(double centerX, double centerY, double centerZ) {
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.centerZ = centerZ; 
+    this.radius = 0;
+  }
+  
+  /**
+   * Four-parameter constructor sets the radius and the center of the
+   * sphere.
+   *
+   * @param radius the radius of the sphere
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate
+   * @param centerZ the center's z-coordinate
+   */
+
+  public Sphere(double radius, double centerX, double centerY, double centerZ) {
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.centerZ = centerZ;
+    this.radius = radius;
+  }
+
+  /**
+   * Determine the sphere's radius.
+   *
+   * @return the radius of the sphere
+   */
+  
+  public double getRadius(){
+    return radius;
+  }
+
+  /**
+   * Determine the sphere's area.
+   *
+   * @return the surface area of the sphere
+   */
+
+  public double area() {
+    // surface area of a sphere
+    return (4 * Math.PI * radius * radius);
+  }
+
+  /**
+   * Determine the sphere's volume.
+   *
+   * @return the volume of sphere
+   */
+
+  public double volume() {
+    // volume of a sphere
+    return (4 * Math.PI * radius * radius * radius) / 3;
+  }
+  /**
+   * Create a string version of the sphere, suitable for (e.g.)
+   * printing
+   *
+   * @return the string representation of the sphere
+   */
+  
+  public String toString() {
+    return String.format("Sphere with:\n   radius %.1f\n"
+			 +"   center at (%.1f, %.1f, %.1f)\n" + 
+			 "   area of %.3f \n   volume of %.3f", 
+			 radius, centerX, centerY, centerZ, area(), volume());
+  }
+}

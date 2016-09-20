@@ -1,0 +1,168 @@
+Script started on Wed 12 Feb 2014 11:50:14 AM EST
+]0;primiano@erdos:proj1[primiano@erdos proj1]$ javac Salesman.java Item.java
+]0;primiano@erdos:proj1[primiano@erdos proj1]$ cat Salesman.java
+import java.util.*;
+
+/**
+ * Salesman.Java
+ * 
+ *<p><b>Project 1 : Willy Loman's Revenge</b> 
+ *
+ * <p>This program produces an invoice for a salesman's order. The
+ * salesman provides (as input) the number sold for each item.
+ * The program produces an invoice that gives the number sold, unit
+ * price, and extended amount for each item, as well as a grand
+ * total.</p>
+ *
+ *
+ * @author <a href="mailto:nprimiano@fordham.edu">Nicholas Primiano</a>
+ * @version 1.0 27 January 2014
+ */
+    
+public class Salesman {
+    public static void main(String[] args) {
+        int[] amounts = inputAmounts(Item.getNames());
+        double[] total = calcExtended(amounts, Item.getPrices());
+        printTotals(Item.getNames(), amounts, Item.getPrices(),total);
+    }
+
+    /**
+     * Get number of each item sold from the user using the Scanner class
+     * 
+     * @param <code>names</code> of items
+     * @return <code>amounts</code> of each item sold
+     */
+    
+   public static int[] inputAmounts(String[] names) {
+        Scanner scan = new Scanner(System.in);
+        int[] amounts = new int [names.length];    
+        System.out.println("Enter the number sold for each item:\n");
+        for (int i = 0; i < names.length; i++) {
+            System.out.print(names[i] + "? ");
+            amounts[i] = scan.nextInt();
+        }
+        scan.close();
+        System.out.println("\n");
+        return amounts;
+    }
+
+    /**
+     * Calculate extended amounts of each item sold 
+     * 
+     * @param <cod>amounts</code> of each item sold
+     * @param <code>prices</code> of each item
+     * @return <code>total</code> of each extended amount
+     */
+    
+   public static double[] calcExtended(int[] amounts, double[] prices) {
+        double[] total = new double[amounts.length];
+        for ( int i = 0; i < prices.length; i++) {
+            total[i] = amounts[i] * prices[i];            
+        }
+        return total;
+    }
+
+    /**
+     * Calculate grand total of items sold
+     * 
+     * @param <code>total</code> number of each item sold
+     * @return <code>sum</code> of all items sold
+     */
+    
+    public static double caclGrandTotal(double[] total) {
+        double sum = 0;
+        for(int i = 0; i < total.length; i++) {
+            sum += total[i];
+        }
+        return sum;
+    }
+    
+    /**
+     * Print names, amounts, and princes of each item.
+     * As well as the grand total.
+     * 
+     * @param <code>names</code> of each item
+     * @param <code>amounts</code> of each item sold
+     * @param <code>prices</code> for each item
+     * @param <code>total</code> number of items sold
+     */
+    
+    public static void printTotals(String[] names, 
+				   int[] amounts, double[] prices, double[] total) {
+        System.out.println(String.format("%-11s %15s %11s %10s",
+					 "Item", "Unit", "Number", "Extended"));
+        System.out.println(String.format("%28s %9s %10s", 
+					 "Price", "Sold", "Amount"));
+        System.out.println("--------------------------" +
+			   "-------------------------");
+        for (int i = 0; i < prices.length; i++) {
+                System.out.println(String.format("%-18s %10.2f %10d %10.2f",
+				   names[i],  prices[i],  amounts[i],  total[i]));
+        }
+        System.out.println(String.format("\nOrder grand total: $%.2f", 
+					 caclGrandTotal(total)));    
+    }
+}
+
+
+]0;primiano@erdos:proj1[primiano@erdos proj1]$ cat Item.java
+public class Item {
+  //private data memebers storing prices and names
+    private static final double prices[] = {10.62, 14.89, 
+	13.20, 16.50, 18.62, 9.47, 6.58, 18.32, 12.15, 3.98};
+    private static final String names[] = {"Toothpaste", "Fish sticks", 
+        "Peanut butter", "Zinc bushing", "Axolotl", "Shoe polish", "Green eggs", 
+        "Filets of mulberry", "Doughnut molds", "Cadmium syrup"};
+    
+    /**
+     * Get method for item prices
+     * 
+     * @return prices
+     */
+   public static final double[] getPrices() {
+        return prices;
+    }
+    
+    /**
+     * Get method for item names
+     * 
+     * @return names
+     */
+   public static final String[] getNames() {            
+        return names;
+    }
+}
+]0;primiano@erdos:proj1[primiano@erdos proj1]$ java Salesman
+Enter the number sold for each item:
+
+Toothpaste? 4
+Fish sticks? 8
+Peanut butter? 3
+Zinc bushing? 0
+Axolotl? 12
+Shoe polish? 7
+Green eggs? 2
+Filets of mulberry? 1
+Doughnut molds? 8
+Cadmium syrup? 3
+
+
+Item                   Unit      Number   Extended
+                       Price      Sold     Amount
+---------------------------------------------------
+Toothpaste              10.62          4      42.48
+Fish sticks             14.89          8     119.12
+Peanut butter           13.20          3      39.60
+Zinc bushing            16.50          0       0.00
+Axolotl                 18.62         12     223.44
+Shoe polish              9.47          7      66.29
+Green eggs               6.58          2      13.16
+Filets of mulberry      18.32          1      18.32
+Doughnut molds          12.15          8      97.20
+Cadmium syrup            3.98          3      11.94
+
+Order grand total: $631.55
+]0;primiano@erdos:proj1[primiano@erdos proj1]$ exit
+exit
+
+Script done on Wed 12 Feb 2014 11:51:13 AM EST

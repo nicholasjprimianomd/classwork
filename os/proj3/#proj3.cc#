@@ -1,0 +1,109 @@
+/**********************************************************************
+ *
+ * Project 3: Analtzing the LRU Algorithm
+ *
+ * Author: Nicholas Primiano <nprimiano@fordham.edu>
+ * Date: 9 December 2013
+ *
+ * Calculate and print number of page faults for a given referance
+ * string using the LRU page replacement algorithm.
+ * 
+ ********************************************************************/
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+// find an element in the memory vector
+int find(int x, vector <int>& memory);
+// checks for page faults
+bool find_fault(int x, int physical_mem, vector <int> &memory, int & page_faults);
+// prints stack and page fault
+void print_stack(bool page_fault, int physical_mem,
+		 int virtual_mem, const vector <int> & memory);
+
+int main()
+{   
+    // size of physical memory
+    int physical_mem;
+    // size of virtual or all memory
+    int virtual_mem;
+    // vector to hold all memory elements
+    vector <int> memory;
+    // page fault counter
+    int page_faults; 
+
+    // read in amout of physical memory and virtual memory
+    cin >> physical_mem >> virtual_mem;
+    cout << "Stack: " << endl;
+    // read in memory elements from reference string 
+    int input;
+    while (cin >> input) {
+	bool page_fault = find_fault(input, physical_mem, memory, page_faults);   
+	print_stack(page_fault, physical_mem, virtual_mem, memory);
+    }	
+    cout << endl;
+    cout << "Page Faults: " << page_faults << endl;
+}
+
+// add page faults, move memory and new elements
+bool find_fault(int input, int physical_mem, vector <int> &memory, int & page_faults)
+{   
+    int x_index = find(input, memory);
+    // if x_index is not in memory add a 
+    // page fault and add input to memory 
+    if (x_index == -1) {
+	page_faults++;
+	memory.push_back(input);
+	x_index = memory.size()-1;
+	// move elements in memory and make input memory[0]
+	for (int i = x_index; i > 0; i--)
+	    memory[i] = memory[i-1];	
+	memory[0] = input;
+	return true;
+    } 
+    else {
+	// if index is in virtual memory add a page fault
+	if (x_index >= physical_mem)
+	    page_faults++;	
+	// move elements in memory and make input memory[0]
+	for (int i = x_index; i > 0 ; i--)
+	    memory[i] = memory[i-1];
+	memory[0] = input;
+	return (x_index >= physical_mem);
+    }
+    
+}
+ 
+// check if input is already in memory
+int find(int input, vector <int>& memory)
+{
+    for (unsigned int i = 0 ; i < memory.size(); i++)
+	if (input == memory[i])
+	    return i;
+    // return -1 if input is not in memory
+    return -1;
+}
+
+// print stack and page faults
+void print_stack(bool page_fault, int physical_mem, 
+		 int virtual_mem, const vector <int> & memory)
+{
+    for (int i = 0; i < virtual_mem; i++) {
+	// print memory elements
+	if ((unsigned int) i < memory.size())
+	    cout << " " <<  memory[i] <<  " ";
+	//  print a "-" if there is no number element to print
+	else
+	    cout <<" _ ";
+	// print "|" between physical and virtual memory
+	if (i == physical_mem)
+	    cout <<" | ";
+    }
+    // print "P" at the end of a line if there is a page fault
+    if (page_fault)
+	cout << " P";    
+    cout << endl;
+}
+
+

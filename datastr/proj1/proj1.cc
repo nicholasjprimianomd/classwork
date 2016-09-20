@@ -1,0 +1,207 @@
+/** @mainpage
+ *
+ * CISC 2200: Data Structures<br/>
+ * Project 1: Computing Powers<br/>
+ *
+ * <p>Compare the preformace of three different algorithms for
+ * computing powers: 
+ * 
+ *<ul>
+ * <li>Iterative </ol>
+ * <li>Naive recursive (directly based on the iterative scheme)</ol>
+ * <li>Clever (divide-and-conquer) recrusive</ol>
+ * </ul>
+ *
+ * We test these methods by computing 2<em><sup>n</em></sup> for
+ * n=0,1,2,...,32 ans 2 <sup><em>n</em></sup> for n=0,1,2,...64.
+ *
+ * Based on Chapter 2 of the text (Exercise 18, Programming Problem 1).</p>
+ * 
+ * @author Nicholas J. Primiano
+ * @date 28 January 2013
+ * @file proj1.cc
+ *
+ **********************************************************************/
+
+#include <iostream>
+using namespace std;
+
+// function prototypes
+template <class T>
+T power1(T x, unsigned int n, unsigned int& mults);
+
+template <class T>
+T power2(T x, unsigned int n, unsigned int& mults);
+
+template <class T>
+T power3(T x, unsigned int n, unsigned int& mults);
+
+template <class T>
+void printReport(T base, unsigned int pow, 
+                 T result1, T result2, T result3,
+                 unsigned int mults1, unsigned int mults2, 
+                 unsigned int mults3);
+
+/**
+ * The usual main function.
+ * 
+ * It computes the powers 2<sup><em>i</em></sup> for
+ * <em>i=</em>0,1,2,..,32 via all three methods, reporting the number
+ * of multiplications needed for each method.  (Note what happens for
+ * 2^32.)  It then does likewise for 0.5<sup><em>i</em></sup>, but now
+ * with <em>i=</em>0,1,2,...64
+ *
+ */
+int main()
+{
+    unsigned int mults1, mults2, mults3;
+    cout << "Test for integer base:\n";
+    for (unsigned int pow = 0; pow <= 32; pow++) {
+	unsigned int base = 2;
+	unsigned int result1 = power1(base, pow, mults1);
+	unsigned int result2 = power2(base, pow, mults2);
+	unsigned int result3 = power3(base, pow, mults3);      
+	printReport(base, pow, result1, result2, result3, 
+		    mults1, mults2, mults3);
+    }
+    cout << "\nTest for floating-point base:\n";
+    for (unsigned int pow = 0; pow <= 64; pow++) {
+	double base = 0.5;
+	double result1 = power1(base, pow, mults1);
+	double result2 = power2(base, pow, mults2);
+	double result3 = power3(base, pow, mults3);      
+	printReport(base, pow, result1, result2, result3, 
+		    mults1, mults2, mults3);
+    }
+}
+
+/**
+ * Iterative solution to compute a power <code>a<sup>n</sup></code>.
+ *
+ * @param x the base
+ * @param n the power                  
+ * @param mults number of multiplications used, initally zero
+ *          
+ * @return <code>a<sup>n</sup></code>
+ *
+ * @pre n >= 0
+ * @post mults is the total number of multiplications used
+ */
+template <class T>
+T power1(T x, unsigned int n, unsigned int& mults)
+{
+    mults = 0;
+    // result = 1 for n = 0 case
+    T result = 1;
+    for(int i = 0; i < n; i++){
+	result = result * x;
+	mults++;
+    }
+    return result;
+}
+
+/**
+ * Naive tail recursion solution to compute a power <code>a<sup>n</sup></code>.
+ * 
+ * Computes <code>a<sup>n</sup></code> as <code>a*a<sup>n-1</sup></code>.
+ *
+ * @param x the power
+ * @param n the exponent                  
+ * @param mults total of multiplications used, which is assumed to
+ * have benn correctly set by any previous recursive calls                                       
+ * @return <code>a<sup>n</sup></code>
+ *
+ * @pre n >= 0
+ * @post mults is the new number of multiplications used
+ */
+template <class T>
+T power2(T x, unsigned int n, unsigned int& mults)
+{
+    mults = 0;
+    //0 mults for 0 and 1 cases
+    if (n == 0) return 1; 
+    if (n == 1) return x; 
+   
+    T result= x*power2(x, n-1, mults);
+    mults++;
+    return result;
+}
+
+/**
+ * Divide-and-conquer recursive function to compute a power <code>a<sup>n</sup></code>. 
+ * <br>
+ * If the exponent is even, the result is simply the square of <code>a
+ * <sup>n/2</sup></code>; if the exponent is even, then the result is
+ * <code>a</code>, multiplied by the square of <code>a<sup>(n-1)/2
+ * </sup></code>. 
+ * 
+ * @param x the power
+ * @param n the exponent                  
+ * @param mults total of multiplications used, which is assumed to
+ * have benn correctly set by any previous recursive calls
+ *
+ * @return <code>a<sup>n</sup></code>
+ *
+ * @pre n >= 0
+ * @post mults is the new number of multiplications used
+ */
+template <class T>
+T power3(T x, unsigned int n, unsigned int& mults)
+{
+    mults = 0;
+    // 0 mults for 0 and 1 cases
+    if (n == 0) return 1;
+    if (n == 1) return x; 
+    // even powers
+    if (n % 2 == 0) {
+	T result = power3(x,n/2, mults);
+	mults++;
+	return result * result;
+    }
+    else {
+	// odd powers
+	T result = power3(x,n/2, mults);
+	mults += 2;
+	return result * result * x;
+    }
+}
+
+/**
+ * Report the results of three different exponentiation calculations.
+ * If the three results differ, then all three are printed out, with 
+ * a warning message. If all three results are the same, the result is 
+ * printed, along with the number of multiplications used by each of 
+ * the three algorithms. 
+ *
+ * @param base the number whose power we seek
+ * @param pow the power
+ * @param result1 the result of using <code>power1</code> to compute
+ * <code>base<sup>power</sup></code>
+ * @param result3 the result of using <code>power2</code> to compute
+ * <code>base<sup>power</sup></code>
+ * @param result4 the result of using <code>power3</code> to compute
+ * <code>base<sup>power</sup></code>
+ * @param mults1 the number of multiplications used by <code>power1</code>
+ * @param mults2 the number of multiplications used by <code>power2</code>
+ * @param mults3 the number of multiplications used by <code>power3</code>
+ *
+ * @pre pow>=0
+ * <code>result1, result2, result3</code> are described in the
+ * parameter section
+ * @post none
+ */
+template <class T>
+void printReport(T base, unsigned int pow, 
+                 T result1, T result2, T result3,
+                 unsigned int mults1, unsigned int mults2, 
+                 unsigned int mults3)
+{
+    cout << base << "^" << pow << " = ";
+    if (result1 == result2 && result2 == result3)
+	cout << result1 << ": ";
+    else
+	cout << "(" << result1 << ", " << result2 << ", " << result3 
+	     << ") [ERROR!]: ";
+    cout << "mults1 = " << mults1 << ", mults2 = " << mults2
+	 << ", mults3 = " << mults3 << endl;
+}

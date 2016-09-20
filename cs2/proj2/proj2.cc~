@@ -1,0 +1,18 @@
+#include "Square.h"
+
+
+
+int main(){
+
+    using namespace Graph_lib;
+
+    Point window_point(100,100);
+    Simple_window square_window(window_point,600,600,"Square");
+
+    Square square1(Point(100,100),Point(200,200));
+    Square square2(Point(300,300),100);
+ 
+    square_window.attach(square1);
+    square_window.attach(square2);
+    square_window.wait_for_button();
+}

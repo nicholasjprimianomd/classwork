@@ -1,0 +1,156 @@
+Script started on Mon 29 Apr 2013 08:44:32 PM EDT
+]0;primiano@erdos:proj5[primiano@erdos proj5]$ g++ -0[Ko proja[K5a proj5a.cc -Wall
+]0;primiano@erdos:proj5[primiano@erdos proj5]$ cat proj5a.cc
+/**********************************************************************
+ * 
+ * Project 5: Operator Overloading
+ *
+ * Author: Nicholas J. Primiano <nprimiano@fordham.edu>
+ * Date: 2 May 2013
+ *
+ * Say something here.
+ *
+ **********************************************************************/
+#include <bjarne/std_lib_facilities.h>
+
+struct Name_pair{
+    string name;
+    int age;
+};
+
+istream& operator>>(istream& input, Name_pair& np);
+ostream& operator<<(ostream& output,const Name_pair& np);
+
+bool operator==(const Name_pair& np0, const Name_pair& np1);
+bool operator!=(const Name_pair& np0, const Name_pair& np1);
+bool operator<(const Name_pair& np0, const Name_pair& np1);
+
+
+// The usual main function
+int main()
+{
+    cout << "Equality/inequality test.\n";
+    while (true){
+	cout << "Enter two name pairs.\n";
+
+	cout << "#0? "; 
+	Name_pair np0;
+	cin >> np0;
+
+	cout << "#1? ";
+	Name_pair np1;
+	cin >> np1;
+
+	if (np0 == np1)
+	    cout << np0 << " equals " << np1 << endl;
+	if (np0 != np1)
+	    cout << np0 << " does not equal " << np1 << endl;
+
+	cout << "Try again (0/1)? ";
+	int try_again;
+	cin >> try_again;
+	if (try_again == 0)
+	    break;
+	else
+	    cout << endl;
+    }
+
+    cout << "\nSorting test.  "
+	 << "How many name pairs do you want to test? ";
+    int num_pairs;
+    cin >> num_pairs;
+    if (num_pairs <= 0)
+	error("Number of name pairs must be positive!  Good-bye!");
+
+    cout << "Please enter the name pairs (one per line).\n";
+    vector<Name_pair> pairs(num_pairs);
+    for (int i = 0; i < num_pairs; i++) {
+	cout << "#" << i << "? ";
+	cin >> pairs[i];
+    }
+    cout << endl;
+
+    cout << "Here are the name pairs you entered:\n";
+    for (unsigned int i = 0; i < pairs.size(); i++)
+	cout << pairs[i] << endl;
+    cout << endl;
+
+    cout << "Here are the name pairs, sorted alphabetically:\n";
+    sort(pairs.begin(), pairs.end());
+    for (unsigned int i = 0; i < pairs.size(); i++)
+	cout << pairs[i] << endl;
+}
+
+istream&  operator>>(istream& input, Name_pair& np)
+{
+    input >> np.name;
+    input >> np.age;
+    return input;
+}
+
+ostream& operator<<(ostream& output, const Name_pair& np)
+{
+    output << np.name;
+    output << ": " << np.age;
+    return output;
+}
+
+bool operator==(const Name_pair& np0, const Name_pair& np1)
+{
+    if((np0.name == np1.name) && (np0.age == np1.age))
+	return true;
+    else 
+	return false;
+}
+
+
+bool operator!=(const Name_pair& np0, const Name_pair& np1)
+{
+    if((np0.name != np1.name) || (np0.age != np1.age))
+	return true;
+    else 
+	return false;
+}
+
+bool operator<(const Name_pair& np0, const Name_pair& np1)
+{
+
+    if(np0.name < np1.name)
+	return true;
+    else
+	return false;
+}
+
+]0;primiano@erdos:proj5[primiano@erdos proj5]$ proj5a
+Equality/inequality test.
+Enter two name pairs.
+#0? nick 5
+#1? john 7
+nick: 5 does not equal john: 7
+Try again (0/1)? 1
+
+Enter two name pairs.
+#0? nick 5
+#1? nick 5
+nick: 5 equals nick: 5
+Try again (0/1)? 0
+
+Sorting test.  How many name pairs do you want to test? 2 3
+Please enter the name pairs (one per line).
+#0? nick 3
+#1? john 6
+#2? jack 3
+
+Here are the name pairs you entered:
+nick: 3
+john: 6
+jack: 3
+
+Here are the name pairs, sorted alphabetically:
+jack: 3
+john: 6
+nick: 3
+]0;primiano@erdos:proj5[primiano@erdos proj5]$ exit
+exit
+
+Script done on Mon 29 Apr 2013 08:47:18 PM EDT

@@ -1,0 +1,29 @@
+Script started on Wed 16 Jan 2013 11:11:41 AM EST
+[primiano@linux-user-108 proj0]$ cat proj0.cc
+/***************************************************************
+ *
+ * Project 0: My first program in C++
+ *
+ * Author: Nicholas Primiano
+ * Date: 16 January 2013
+ *
+ * This is the canonical first program for C++.
+ * Its purpose is to show that one knows how to create a program in
+ * one's particular programming enviroment. 
+ *
+ **************************************************************/
+#include <bjarne/std_lib_facilities.h>
+
+int main()
+{
+    cout << "Hello, World!\n";
+
+    return 0;
+}
+[primiano@linux-user-108 proj0]$ g++ -o proj0 proj0.cc
+[primiano@linux-user-108 proj0]$ proj0
+Hello, World!
+[primiano@linux-user-108 proj0]$ exit
+exit
+
+Script done on Wed 16 Jan 2013 11:12:30 AM EST

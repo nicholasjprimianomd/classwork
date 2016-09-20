@@ -1,0 +1,205 @@
+Script started on Wed 13 Nov 2013 01:27:39 AM EST
+]0;primiano@erdos:proj4[primiano@erdos proj4]$ cat proj4.cc
+/**********************************************************************
+ *
+ * Project 4: Strings, the Hard Way
+ *
+ * Author: Nicholas Primiano <nprimiano@fordham.edu>
+ * Date: 14 November 2013  
+ *
+ * Converts lowercase characters of a string to uppercase characters.
+ * Concatenates given strings. Checks if a string is a palindrome.	   
+ *
+ **********************************************************************/
+
+#include <iostream>
+using namespace std;
+
+const char* get_c_string();
+int strlen(const char* s);
+bool islower(char c);
+void toupper(char* s);
+char* strdup(const char* s);
+char* cat_dot(const char *s1, const char* s2, const char* sep =".");
+char* reverse(const char* s);
+bool equal(const char* s1, const char* s2);
+bool is_palindrome(const char* s);
+
+// test out our functions
+int main()
+{
+    cout << "toupper/strdup test:\n";
+    cout << "Enter a mixed-case string: ";
+    const char* s = get_c_string();
+    cout << "The original string is \"" << s << "\"\n";
+    char *s1 = strdup(s);
+    toupper(s1);
+    cout << "Translated to upper case: \"" << s1 << "\"\n";
+
+    cout << "\ncat_dot test\n";
+    char str1[] = "bonjour";
+    char str2[] = "olam";
+    // use default separator
+    cout << "cat_dot(\"" << str1 << "\", \"" << str2 << "\") is \""
+	 << cat_dot(str1, str2) << "\"\n";
+    // use new separator
+    char newsep[] = "#!?"; 
+    cout << "cat_dot(\"" << str1 << "\", \"" << str2 << "\", " 
+	 << newsep << "\") is \""
+	 << cat_dot(str1, str2, newsep) << "\"\n";
+
+    cout << "\nPalindrome test:\n";
+    cout << "Enter palindrome candidates (one per line).\n"
+	"End-of-file (control-D) terminates input (and program).\n";
+    while (true) {
+	const char* pal_cand = get_c_string();
+	if (!cin)
+	    break;
+	cout << "\"" << pal_cand << "\" is " ;
+	if (!is_palindrome(pal_cand)) cout << "not ";
+	cout << "a palindrome.\n";
+    }
+}
+
+// returns the length of a C-string 
+int strlen(const char *s)
+{
+    int len = 0;
+    while (s[len] != 0)
+	len++;
+    return len;
+}
+
+// read a line of input, store in a C string
+// not exactly in the spirit of C :-)
+// suffers from a memory leak
+const char* get_c_string()
+{
+    string str;
+    getline(cin, str);
+    const char* s = str.c_str();         // memory leak!
+    return s;
+}
+
+// check is a character is lowercase
+bool islower(char c)
+{
+    //ASCII boundries for lowercase letters
+    const int lower_bound = 96;
+    const int upper_bound = 123;
+
+    if (c < lower_bound || c > upper_bound){
+	return false;
+    }
+    return true;
+}
+
+// change lowercase character to uppercase
+char toupper(char c)
+{
+    c = c - 'a' + 'A';
+    return c;
+}
+
+// chage lowercase character to uppercase
+// do not change if the character is already uppercase
+void toupper(char* s)
+{
+    for(int i = 0; i < strlen(s); i++){
+	if(islower(s[i])){
+	    s[i]=toupper(s[i]);
+	}
+    }
+}
+
+// duplicate input string
+char* strdup(const char* s)
+{
+    char *p = new char[strlen(s)];
+    for(int i = 0; i < strlen(s); i++){
+	p[i] = s[i];
+    }
+    return p;
+}
+
+// concatenate given strings
+char* cat_dot(const char *s1, const char* s2, const char* sep)
+{
+    char *p = new char[strlen(s1)+strlen(sep)+strlen(s2)];
+    // first string
+    for(int i = 0; i < strlen(s1); i++){
+	p[i] = s1[i];
+    }
+    // separator
+    for(int i = 0; i < strlen(sep); i++){
+	// p[first string plus counter]
+	p[strlen(s1)+i] = sep[i];
+    }
+    // second string
+    for(int i = 0; i < strlen(s2); i++){
+	// p[first string plus counter plus second string]
+	p[strlen(s1)+strlen(sep)+i] = s2[i];
+    }
+    return p;
+}
+
+/// reverse string for palindrome check
+char* reverse(const char* s)
+{
+    char *p = new char[strlen(s)];
+    for(int i = 1; i < strlen(s)+1; i++){	
+	p[i-1] = s[strlen(s)-i];
+    }
+    return p;
+}
+
+// check if origional string and reversed strings are the same
+bool equal(const char* s1, const char* s2)
+{
+    for(int i = 0; i < strlen(s1); i++){
+	if(s1[i]!=s2[i]){
+	    return false;
+	}
+    }
+    return true;
+}
+
+// check if a string is a plaindrome
+bool is_palindrome(const char* s)
+{
+    if(equal(s,reverse(s))){
+	return true;
+    }
+    return false;
+}
+
+]0;primiano@erdos:proj4[primiano@erdos proj4]$ make
+make: Nothing to be done for `all'.
+]0;primiano@erdos:proj4[primiano@erdos proj4]$ make
+g++ -Wall    -c -o proj4.o proj4.cc
+g++ -Wall  -o proj4 proj4.o  
+]0;primiano@erdos:proj4[primiano@erdos proj4]$ proj4.[K
+toupper/strdup test:
+Enter a mixed-case string: HeLlo
+The original string is "HeLlo"
+Translated to upper case: "HELLO"
+
+cat_dot test
+cat_dot("bonjour", "olam") is "bonjour.olam"
+cat_dot("bonjour", "olam", #!?") is "bonjour#!?olam"
+
+Palindrome test:
+Enter palindrome candidates (one per line).
+End-of-file (control-D) terminates input (and program).
+racecar
+"racecar" is a palindrome.
+Racecar
+"Racecar" is not a palindrome.
+amanaplanacanalpanama
+"amanaplanacanalpanama" is a palindrome.
+hello
+"hello" is not a palindrome.
+]0;primiano@erdos:proj4[primiano@erdos proj4]$ wxit[K[K[K[Kexit
+exit
+
+Script done on Wed 13 Nov 2013 01:29:16 AM EST

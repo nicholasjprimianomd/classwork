@@ -1,0 +1,116 @@
+/**
+ * The Cube class is a class of three-dimensional shapes. Not
+ * suprisingly, the objects of this class are cubes. A cube is
+ * specified by its center and sidelength.
+ * 
+ * @version 1.0 28 Jan 2014 
+ * @author Nicholas Primiano
+ */
+
+public class Cube extends Shape3D {
+  
+  private double sideLength = 0;
+
+  /**
+   * Zero-parameter constructor makes the origin the center of the cube
+   * and makes the sidelength of the cube zero.
+   */
+  
+  public Cube() {
+    this.centerX = 0;
+    this.centerY = 0;
+    this.centerZ = 0;
+    this.sideLength = 0;
+  }
+  
+  /** 
+   * One-parameter constructor sets the sidelength, and makes
+   * the origin the center of the cube.
+   *
+   * @param sideLength the sidelength of the cube
+   */
+
+  public Cube(double sideLength) {
+    this.centerX = 0;
+    this.centerY = 0;
+    this.centerZ = 0;
+    this.sideLength = sideLength;
+  }
+  
+  /**
+   * Three-parameter constructor sets the center, and makes the 
+   * sidelength of the cube zero.
+   *
+   * @param centerX the center's x-coordinate 
+   * @param centerY the center's y-coordinate
+   * @param centerZ the center's z-coordinate
+   */
+
+  public Cube(double centerX, double centerY, double centerZ){
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.centerZ = centerZ;
+    this.sideLength = 0;
+  }
+  
+  /**
+   * Four-parameter constructor sets the sidelength and the center of
+   * the cube.
+   *
+   * @param sideLength the sidelength of the cube
+   * @param centerX the center's x-coordinate
+   * @param centerY the center's y-coordinate
+   * @param centerZ the center's z-coordinate
+   */
+
+  public Cube(double sideLength, double centerX, double centerY, double centerZ){
+    this.centerX = centerX;
+    this.centerY = centerY;
+    this.centerZ = centerZ;
+    this.sideLength = sideLength;
+  }
+  
+  /**
+   * Determine the cube's sidelength.
+   *
+   * @return the sidelength of the cube.
+   */
+
+  public double getSideLength(){
+    return sideLength;
+  }
+
+  /**
+   * Determine the cube's surface area.
+   *
+   * @return the surface area of the cube.
+   */
+
+  public double area() {
+    // surface area of a cube 6 * sidelength * sidelength
+    return 6 * sideLength * sideLength; 
+  }
+
+  /**
+   * Determine the cube's volume.
+   *
+   * @return the volume of the cube.
+   */
+
+  public double volume() {
+    return sideLength * sideLength * sideLength;
+  }
+
+  /**
+   * Create a string version of the cube, suitable for (e.g.) printing
+   *
+   * @return the stxring representation of the cube.
+   */
+
+  public String toString() {
+    return String.format("Cube with:\n   side length %.1f\n" +
+			 "   center at (%.1f, %.1f, %.1f)\n" + 
+			 "   area of %.3f \n   volume of %.3f", 
+			 sideLength, centerX, centerY, centerZ, area(), volume());
+  }
+}

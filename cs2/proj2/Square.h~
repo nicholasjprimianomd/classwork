@@ -1,0 +1,41 @@
+#include "Simple_window.h"
+#include "Graph.h"
+#include <iostream>
+
+
+
+class Square : public Shape {
+
+public:
+    
+
+//constructor for Square defined by single point and side length
+    Square(Point xy, int ll) : l(ll)
+	{
+	    if (l <= 0){
+		throw 1;
+	    }
+	    add(xy);
+	}
+//constructor for Square defined by two points
+    Square(Point x, Point y) : l(y.x-x.x)
+	{
+
+	    if(l != (y.y-x.y)){
+		throw 2;
+	    }
+	    if(l <=  0){
+		throw 1;
+	    }
+	
+	    add(x);
+	}
+//draw square
+    void draw_lines() const;
+
+    int length() const { return l;}
+    
+private: 
+    int l;    // length
+};
+
